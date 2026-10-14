@@ -2,7 +2,6 @@ import { revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 import { parseBody } from "next-sanity/webhook";
 
-export const runtime = "nodejs";
 
 type WebhookPayload = {
   _type?: string;
