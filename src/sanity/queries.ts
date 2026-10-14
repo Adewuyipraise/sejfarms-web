@@ -126,7 +126,8 @@ export const GALLERY_ALBUMS_QUERY = groq`
     category,
     year,
     "coverImage": coverImage.asset->url,
-    "mediaCount": count(media)
+    "imageCount": count(coalesce(images, [])),
+    "videoCount": count(coalesce(videos, []))
   }
 `;
 
@@ -155,7 +156,6 @@ export const GALLERY_ALBUM_BY_SLUG_QUERY = groq`
 export const GALLERY_ALBUM_SLUGS_QUERY = groq`
   *[_type == "galleryAlbum" && defined(slug.current)][].slug.current
 `;
-
 
 // ---------- Testimonials ----------
 export const TESTIMONIALS_QUERY = groq`
@@ -258,4 +258,85 @@ export const JOB_BY_SLUG_QUERY = groq`
 
 export const JOB_SLUGS_QUERY = groq`
   *[_type == "jobPosting" && defined(slug.current)][].slug.current
+`;
+
+// ---------- Services ----------
+export const SERVICES_QUERY = groq`
+  *[_type == "service"] | order(order asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    groupSlug,
+    shortDescription,
+    "image": image.asset->url
+  }
+`;
+
+export const SERVICE_BY_SLUG_QUERY = groq`
+  *[_type == "service" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    groupSlug,
+    shortDescription,
+    "image": image.asset->url,
+    "heroImage": heroImage.asset->url,
+    overview,
+    offering[] {
+      title,
+      description
+    },
+    process[] {
+      step,
+      title,
+      description
+    },
+    faqs[] {
+      q,
+      a
+    }
+  }
+`;
+
+export const SERVICE_SLUGS_QUERY = groq`
+  *[_type == "service" && defined(slug.current)][].slug.current
+`;
+
+// ---------- Subsidiaries ----------
+export const SUBSIDIARIES_QUERY = groq`
+  *[_type == "subsidiary"] | order(order asc) {
+    _id,
+    name,
+    shortName,
+    "slug": slug.current,
+    tagline,
+    description,
+    "image": image.asset->url,
+    whatsapp,
+    email
+  }
+`;
+
+export const SUBSIDIARY_BY_SLUG_QUERY = groq`
+  *[_type == "subsidiary" && slug.current == $slug][0] {
+    _id,
+    name,
+    shortName,
+    "slug": slug.current,
+    tagline,
+    description,
+    "image": image.asset->url,
+    "heroImage": heroImage.asset->url,
+    whatsapp,
+    email,
+    about,
+    services[] {
+      title,
+      description
+    }
+  }
+`;
+
+export const SUBSIDIARY_SLUGS_QUERY = groq`
+  *[_type == "subsidiary" && defined(slug.current)][].slug.current
 `;

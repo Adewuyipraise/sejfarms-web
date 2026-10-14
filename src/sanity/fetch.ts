@@ -1,12 +1,5 @@
 import { client } from "./lib/client";
 
-/**
- * Fetch from Sanity. Returns cached data with a revalidation window.
- *
- * In production, use Next.js revalidateTag with a webhook from Sanity
- * so publishing updates the site immediately. For now, we use a simple
- * time-based revalidation.
- */
 export async function sanityFetch<T>({
   query,
   params = {},
@@ -20,7 +13,7 @@ export async function sanityFetch<T>({
 }): Promise<T> {
   return client.fetch<T>(query, params, {
     next: {
-      revalidate,
+      revalidate: tags.length ? false : revalidate,
       tags,
     },
   });
