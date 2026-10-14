@@ -129,7 +129,9 @@ export function Footer() {
 
         <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-cream/10 pt-8 text-xs text-cream/60 md:flex-row md:items-center">
           <p>
-            © <CopyrightYear /> {site.name}. All rights reserved.
+            © <CopyrightYear /> {site.name}. All rights reserved. Designed and Developed by <Link target="_blank" href="https://pesedierasheed.netlify.app" className="hover:text-white">
+              Pesedie Rasheed
+            </Link>
           </p>
           <div className="flex gap-6">
             <Link target="_blank" href="/studio" className="hover:text-white">
