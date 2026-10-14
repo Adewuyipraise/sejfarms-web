@@ -1,26 +1,103 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* === COLORS === */
+  --color-brand: #1B5E20;
+  --color-brand-dark: #0D3B14;
+  --color-brand-light: #2E7D32;
+  
+  --color-earth: #8D6E63;
+  --color-earth-light: #A1887F;
+  
+  --color-accent: #F9A825;
+  --color-accent-light: #FBC02D;
+  
+  --color-cream: #FAF7F2;
+  --color-charcoal: #1A1A1A;
+  --color-muted: #6B6B6B;
+  --color-border: #E5E0D8;
+
+  /* === FONTS === */
+  /* These wire up to the next/font variables in layout.tsx */
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
+
+  /* === BORDER RADIUS === */
+  --radius-card: 12px;
+  --radius-button: 8px;
+  --radius-pill: 999px;
+
+  /* === SHADOWS === */
+  --shadow-soft: 0 4px 24px -8px rgb(0 0 0 / 0.08);
+  --shadow-lift: 0 12px 40px -12px rgb(0 0 0 / 0.12);
+
+  /* === TYPE SCALE === Fluid 1.250 major third (was in tailwind.config.ts, never loaded by v4) */
+  --text-display: clamp(2.75rem, 6vw, 5rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.02em;
+  --text-h1: clamp(2.25rem, 4.5vw, 3.25rem);
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: clamp(1.875rem, 3.5vw, 2.5rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: clamp(1.5rem, 2.4vw, 2rem);
+  --text-h3--line-height: 1.2;
+  --text-h4: 1.125rem;
+  --text-h4--line-height: 1.6;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.6;
+  --text-body: 1rem;
+  --text-body--line-height: 1.65;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.55;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.5;
+
+  /* === SPACING === generates py-section, gap-section, etc. */
+  --spacing-section: clamp(4rem, 8vw, 8rem);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    @apply bg-cream text-charcoal font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-brand text-white;
+  }
+
+  *:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-cream), 0 0 0 4px var(--color-accent);
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility text-pretty {
+  text-wrap: pretty;
+}
+
+@utility text-justify {
+  text-align: justify;
+  hyphens: auto;
 }

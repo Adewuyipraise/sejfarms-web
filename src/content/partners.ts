@@ -1,0 +1,28 @@
+import type { Partner } from "@/types";
+
+export const partners: Partner[] = [
+  { name: "WISHH",      logo: "/logos/partners/wishh.png" },
+  { name: "IITA",      logo: "/logos/partners/iita.png" },
+  { name: "WorldFish", logo: "/logos/partners/worldfish.png" },
+  { name: "USSEC",     logo: "/logos/partners/ussec.jpg" },
+  { name: "APPEALS",   logo: "/logos/partners/appeals.png" },
+  { name: "BATNF",     logo: "/logos/partners/batnf.png" },
+  { name: "ESCAE",     logo: "/logos/partners/escae.svg" },
+  { name: "Aller Aqua",logo: "/logos/partners/alleraqua.jpg" },
+  { name: "LASCAFAN",  logo: "/logos/partners/lascafan.jpg" },
+  { name: "ASA",      logo: "/logos/partners/asa.jpg" },
+  { name: "BACCIMA",      logo: "/logos/partners/baccima.png" },
+  { name: "Equip Africa", logo: "/logos/partners/equipafrica.png" },
+  { name: "Frontier Harvesters",     logo: "/logos/partners/frontierharvesters.png" },
+  { name: "FUNAAB",   logo: "/logos/partners/funaab.png" },
+  { name: "LASU",     logo: "/logos/partners/lasu.jpg" },
+  { name: "JOSTUM",     logo: "/logos/partners/jostum.jpg" },
+  { name: "FUTA",logo: "/logos/partners/futa.jpg" },
+  { name: "LASUED",  logo: "/logos/partners/lasued.jpg" },  
+  { name: "SIWES",      logo: "/logos/partners/siwes.jpg" },
+  { name: "TommyCare",      logo: "/logos/partners/tommycare.jpg" },
+  { name: "UNILAG", logo: "/logos/partners/unilag.png" },
+  { name: "USB",     logo: "/logos/partners/usb.jpg" },
+  { name: "UNIOSUN",   logo: "/logos/partners/uniosun.png" },
+  { name: "VOTF",     logo: "/logos/partners/votf.png" }, 
+];
