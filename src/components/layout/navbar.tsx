@@ -29,17 +29,16 @@ export function Navbar() {
     setMoreOpen(false);
   }, []);
 
-
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all",
+        "sticky top-0 z-50 w-full transition-colors duration-200",
         scrolled
-          ? "border-b border-border bg-cream/95 backdrop-blur-md"
-          : "bg-cream/80",
+          ? "border-b border-border bg-cream shadow-soft"
+          : "bg-cream",
       )}
     >
-      <Container className="flex h-20 items-center justify-between md:h-24">
+      <Container className="flex h-16 items-center justify-between md:h-24">
         <Link href="/" className="flex items-center">
           <Image
             src="/logos/sejfarms-logo.png"
@@ -47,10 +46,11 @@ export function Navbar() {
             width={200}
             height={52}
             priority
-            className="h-12 w-auto md:h-16"
+            className="h-10 w-auto md:h-16"
           />
         </Link>
 
+        {/* Desktop nav — hidden on mobile */}
         <nav className="hidden items-center gap-6 lg:flex">
           {navigation.map((item) => {
             if ("children" in item && item.children) {
@@ -112,57 +112,66 @@ export function Navbar() {
           </Button>
         </div>
 
+        {/* Mobile menu toggle */}
         <button
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((v) => !v)}
-          className="lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-charcoal transition-colors hover:bg-brand/5 lg:hidden"
         >
-          {open ? <X /> : <Menu />}
+          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </Container>
 
+      {/* Mobile drawer — fixed, full-viewport overlay */}
       {open && (
-        <div className="fixed inset-x-0 top-20 bottom-0 z-40 overflow-y-auto border-t border-border bg-cream p-6 lg:hidden">
-          <nav className="flex flex-col gap-1">
-            {navigation.map((item) => {
-              if ("children" in item && item.children) {
-                return (
-                  <div key={item.label} className="py-2">
-                    <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted">
-                      {item.label}
-                    </p>
-                    {item.children.map((child) => (
-                      <Link
-                        key={child.href}
-                        href={child.href}
-                        onClick={() => setOpen(false)}
-                        className="block rounded-lg px-3 py-3 text-base font-medium text-charcoal hover:bg-brand/5"
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                );
-              }
+        <>
+          <div
+            className="fixed inset-0 top-16 z-40 bg-charcoal/40 lg:hidden"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="fixed inset-x-0 top-16 bottom-0 z-50 overflow-y-auto border-t border-border bg-white lg:hidden">
+            <nav className="flex flex-col p-4">
+              {navigation.map((item) => {
+                if ("children" in item && item.children) {
+                  return (
+                    <div key={item.label} className="py-2">
+                      <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-muted">
+                        {item.label}
+                      </p>
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          onClick={() => setOpen(false)}
+                          className="block rounded-lg px-4 py-3 text-base font-medium text-charcoal hover:bg-brand/5"
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  );
+                }
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-3 text-base font-medium text-charcoal hover:bg-brand/5"
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-            <div className="mt-4">
-              <Button href="/work-with-us" size="lg" className="w-full">
-                Work With Us
-              </Button>
-            </div>
-          </nav>
-        </div>
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="rounded-lg px-4 py-3 text-base font-medium text-charcoal hover:bg-brand/5"
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+              <div className="mt-4 px-2">
+                <Button href="/work-with-us" size="lg" className="w-full">
+                  Work With Us
+                </Button>
+              </div>
+            </nav>
+          </div>
+        </>
       )}
     </header>
   );
