@@ -10,6 +10,7 @@ import { jobPosting } from "./jobPosting";
 import { siteSettings } from "./siteSettings";
 import { service } from "./service";
 import { subsidiary } from "./subsidiary";
+import { project } from "./project";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -23,5 +24,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     siteSettings,
     service,
     subsidiary,
+    project,
   ],
 };

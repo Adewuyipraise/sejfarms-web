@@ -357,3 +357,54 @@ export const SUBSIDIARY_BY_SLUG_QUERY = groq`
 export const SUBSIDIARY_SLUGS_QUERY = groq`
   *[_type == "subsidiary" && defined(slug.current)][].slug.current
 `;
+
+
+// ---------- Projects ----------
+export const PROJECTS_QUERY = groq`
+  *[_type == "project"] | order(order asc, year desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    category,
+    location,
+    year,
+    description,
+    "image": image.asset->url,
+    featured
+  }
+`;
+
+export const FEATURED_PROJECTS_QUERY = groq`
+  *[_type == "project" && featured == true] | order(order asc, year desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    category,
+    location,
+    year,
+    description,
+    "image": image.asset->url,
+    featured
+  }
+`;
+
+export const PROJECT_BY_SLUG_QUERY = groq`
+  *[_type == "project" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    category,
+    location,
+    year,
+    description,
+    challenge,
+    approach,
+    outcome,
+    "image": image.asset->url,
+    featured
+  }
+`;
+
+export const PROJECT_SLUGS_QUERY = groq`
+  *[_type == "project" && defined(slug.current)][].slug.current
+`;
