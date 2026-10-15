@@ -8,6 +8,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
 import { sanityFetch } from "@/sanity/fetch";
 import { PROJECTS_QUERY } from "@/sanity/queries";
+import { Stagger, StaggerItem } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -53,12 +54,12 @@ export default async function ProjectsPage() {
               </p>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Stagger className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project) => (
+                <StaggerItem key={project._id} className="flex">
                 <Link
-                  key={project._id}
                   href={`/projects/${project.slug}`}
-                  className="group flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
+                  className="group flex w-full flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-brand/10">
                     <Image
@@ -85,8 +86,9 @@ export default async function ProjectsPage() {
                     </span>
                   </div>
                 </Link>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           )}
         </Container>
       </Section>

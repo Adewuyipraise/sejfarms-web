@@ -15,7 +15,7 @@ const paths = [
   {
     title: "I am a farmer",
     description: "Technical support, farm planning, pond construction or training.",
-    href: "/what-we-do/consultancy",
+    href: "/services/consultancy",
     cta: "Talk to a consultant",
   },
   {
@@ -27,7 +27,7 @@ const paths = [
   {
     title: "I want to learn",
     description: "Training programmes, internships and the SEJFARMS Knowledge Hub.",
-    href: "/what-we-do/training-internship",
+    href: "/services/training",
     cta: "View training",
   },
   {

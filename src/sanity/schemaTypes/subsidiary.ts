@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineField, defineType, type Rule } from "sanity";
 
 export const subsidiary = defineType({
   name: "subsidiary",
@@ -78,8 +78,8 @@ export const subsidiary = defineType({
           type: "object",
           name: "subsidiaryService",
           fields: [
-            { name: "title", title: "Title", type: "string", validation: (r: any) => r.required() },
-            { name: "description", title: "Description", type: "text", rows: 2, validation: (r: any) => r.required() },
+            { name: "title", title: "Title", type: "string", validation: (r: Rule) => r.required() },
+            { name: "description", title: "Description", type: "text", rows: 2, validation: (r: Rule) => r.required() },
           ],
         },
       ],

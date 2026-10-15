@@ -6,6 +6,7 @@ import { Section } from "@/components/ui/section";
 import { Heading } from "@/components/ui/heading";
 import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { sanityFetch } from "@/sanity/fetch";
 import { OPEN_JOBS_QUERY } from "@/sanity/queries";
 
@@ -46,9 +47,9 @@ export default async function CareersPage() {
 
       <Section>
         <Container>
-          <div className="mx-auto max-w-3xl">
+          <Reveal className="mx-auto max-w-3xl">
             <Heading level={2}>Why Sejfarms?</Heading>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            <Stagger className="mt-8 grid gap-6 sm:grid-cols-2">
               {[
                 {
                   title: "Real Operations",
@@ -67,24 +68,26 @@ export default async function CareersPage() {
                   body: "Sejfarms is expanding. Roles evolve as the group grows.",
                 },
               ].map((p) => (
-                <div
+                <StaggerItem
                   key={p.title}
-                  className="rounded-card border border-border bg-white p-6"
+                  className="rounded-card border border-border bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-lift"
                 >
                   <h3 className="font-display text-h4 font-semibold">
                     {p.title}
                   </h3>
                   <p className="mt-2 text-sm text-muted">{p.body}</p>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
-          </div>
+            </Stagger>
+          </Reveal>
         </Container>
       </Section>
 
       <Section id="openings" className="bg-white">
         <Container>
-          <Heading level={2}>Current Opportunities</Heading>
+          <Reveal>
+            <Heading level={2}>Current Opportunities</Heading>
+          </Reveal>
 
           {jobs.length === 0 ? (
             <p className="mt-6 max-w-2xl text-muted">
@@ -92,10 +95,10 @@ export default async function CareersPage() {
               application or check back soon.
             </p>
           ) : (
-            <div className="mt-10 space-y-4">
+            <Stagger className="mt-10 space-y-4">
               {jobs.map((job) => (
+                <StaggerItem key={job._id}>
                 <Link
-                  key={job._id}
                   href={`/careers/${job.slug}`}
                   className="group flex flex-col gap-3 rounded-card border border-border bg-cream p-6 transition-all hover:-translate-y-0.5 hover:shadow-lift sm:flex-row sm:items-center sm:justify-between"
                 >
@@ -112,8 +115,9 @@ export default async function CareersPage() {
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </span>
                 </Link>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           )}
 
           <p className="mt-12 max-w-2xl text-sm text-muted">
@@ -124,7 +128,7 @@ export default async function CareersPage() {
             >
               Send us a speculative application
             </Link>{" "}
-            and we'll keep you in mind.
+            and we’ll keep you in mind.
           </p>
         </Container>
       </Section>

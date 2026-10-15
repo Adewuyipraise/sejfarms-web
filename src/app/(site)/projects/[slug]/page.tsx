@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { Heading } from "@/components/ui/heading";
 import { PageCTA } from "@/components/shared/page-cta";
+import { Reveal } from "@/components/motion/reveal";
 import { sanityFetch } from "@/sanity/fetch";
 import {
   PROJECT_BY_SLUG_QUERY,
@@ -100,15 +101,17 @@ async function ProjectContent({ params }: { params: Promise<Params> }) {
       {/* Title + meta */}
       <Section>
         <Container>
-          <p className="font-display text-sm font-semibold uppercase tracking-wider text-brand">
-            {project.category} · {project.location} · {project.year}
-          </p>
-          <Heading level={1} className="mt-3">
-            {project.title}
-          </Heading>
-          <p className="mt-6 max-w-3xl text-body-lg text-charcoal/80 text-pretty">
-            {project.description}
-          </p>
+          <Reveal>
+            <p className="font-display text-sm font-semibold uppercase tracking-wider text-brand">
+              {project.category} · {project.location} · {project.year}
+            </p>
+            <Heading level={1} className="mt-3">
+              {project.title}
+            </Heading>
+            <p className="mt-6 max-w-3xl text-body-lg text-charcoal/80 text-pretty">
+              {project.description}
+            </p>
+          </Reveal>
         </Container>
       </Section>
 
@@ -120,14 +123,14 @@ async function ProjectContent({ params }: { params: Promise<Params> }) {
           <Container>
             <div className="mx-auto max-w-3xl space-y-12">
               {project.challenge && (
-                <div>
+                <Reveal>
                   <Heading level={3}>Challenge</Heading>
                   <p className="mt-3 text-charcoal/80">{project.challenge}</p>
-                </div>
+                </Reveal>
               )}
 
               {project.approach && project.approach.length > 0 && (
-                <div>
+                <Reveal>
                   <Heading level={3}>Our Approach</Heading>
                   <ul className="mt-4 space-y-3">
                     {project.approach.map((step, i) => (
@@ -139,11 +142,11 @@ async function ProjectContent({ params }: { params: Promise<Params> }) {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </Reveal>
               )}
 
               {project.outcome && project.outcome.length > 0 && (
-                <div>
+                <Reveal>
                   <Heading level={3}>Outcome</Heading>
                   <ul className="mt-4 space-y-3">
                     {project.outcome.map((result, i) => (
@@ -153,7 +156,7 @@ async function ProjectContent({ params }: { params: Promise<Params> }) {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </Reveal>
               )}
             </div>
           </Container>

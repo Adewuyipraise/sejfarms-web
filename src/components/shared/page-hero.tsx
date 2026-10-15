@@ -34,7 +34,7 @@ export function PageHero({
             alt=""
             fill
             priority
-            className="object-cover"
+            className="animate-kenburns object-cover"
             sizes="100vw"
           />
           <div className="absolute inset-0 bg-brand-dark/90" aria-hidden />
@@ -51,7 +51,7 @@ export function PageHero({
           {eyebrow && (
             <Eyebrow
               className={cn(
-                "text-sm font-semibold tracking-[0.18em]",
+                "animate-rise text-sm font-semibold tracking-[0.18em]",
                 isDark && "text-accent",
               )}
             >
@@ -61,7 +61,7 @@ export function PageHero({
 
           <h1
             className={cn(
-              "mt-4 font-display text-3xl font-bold leading-[1.15] tracking-tight text-balance sm:text-4xl md:text-5xl",
+              "animate-rise mt-4 font-display text-3xl font-bold leading-[1.15] tracking-tight text-balance [animation-delay:80ms] sm:text-4xl md:text-5xl",
               isDark && "text-white",
             )}
           >
@@ -71,7 +71,7 @@ export function PageHero({
           {description && (
             <p
               className={cn(
-                "mt-6 max-w-3xl text-lg leading-relaxed text-pretty md:text-xl",
+                "animate-rise mt-6 max-w-3xl text-lg leading-relaxed text-pretty [animation-delay:160ms] md:text-xl",
                 isDark ? "text-cream/90" : "text-charcoal/80",
               )}
             >

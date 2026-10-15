@@ -1,5 +1,4 @@
 import { defineField, defineType } from "sanity";
-import { youtube } from './youtube'
 
 export const post = defineType({
   name: "post",

@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/motion/reveal";
 
 type Testimonial = {
   _id: string;
@@ -24,6 +26,7 @@ export function ImpactTeaserClient({
   testimonials: Testimonial[];
 }) {
   const [index, setIndex] = useState(0);
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     if (testimonials.length < 2) return;
@@ -49,7 +52,7 @@ export function ImpactTeaserClient({
     <Section className="bg-cream">
       <Container>
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-          <div>
+          <Reveal>
             <Eyebrow>Our Impact</Eyebrow>
             <Heading level={2} className="mt-4">
               Creating Impact Beyond Production
@@ -62,13 +65,18 @@ export function ImpactTeaserClient({
             <div className="mt-8">
               <Button href="/reviews">Read More Reviews →</Button>
             </div>
-          </div>
+          </Reveal>
 
-          <figure
-            key={current.slug}
-            className="rounded-card border border-border bg-white p-8 shadow-soft"
-          >
-            <blockquote className="font-display text-p font-medium text-charcoal">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.figure
+              key={current.slug}
+              initial={reduce ? false : { opacity: 0, y: 12 }}
+              animate={reduce ? {} : { opacity: 1, y: 0 }}
+              exit={reduce ? {} : { opacity: 0, y: -12 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="rounded-card border border-border bg-white p-8 shadow-soft"
+            >
+            <blockquote className="font-display text-body-lg font-medium text-charcoal text-pretty">
               “{current.quote}”
             </blockquote>
 
@@ -106,6 +114,7 @@ export function ImpactTeaserClient({
                 {testimonials.map((_, i) => (
                   <button
                     key={i}
+                    type="button"
                     onClick={() => setIndex(i)}
                     aria-label={`View testimonial ${i + 1}`}
                     className={`h-2 w-2 rounded-full transition-colors ${
@@ -115,7 +124,8 @@ export function ImpactTeaserClient({
                 ))}
               </div>
             )}
-          </figure>
+          </motion.figure>
+          </AnimatePresence>
         </div>
       </Container>
     </Section>

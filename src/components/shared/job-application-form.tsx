@@ -62,8 +62,8 @@ export function JobApplicationForm({
           Application received.
         </h3>
         <p className="mt-3 text-charcoal/80">
-          Thank you for applying for {jobTitle}. We'll review your application
-          and be in touch if you're shortlisted.
+          Thank you for applying for {jobTitle}. We’ll review your application
+          and be in touch if you’re shortlisted.
         </p>
       </div>
     );

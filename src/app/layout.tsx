@@ -4,13 +4,13 @@ import "./globals.css";
 
 const display = Manrope({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-manrope",
   display: "swap",
 });
 
 const body = Inter({
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -22,6 +22,14 @@ export const metadata: Metadata = {
   },
   description:
     "An integrated African agribusiness ecosystem connecting aquaculture, agriculture, knowledge, innovation, value addition and market opportunities.",
+  icons: {
+    icon: [
+      { url: "/icon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+  },
   openGraph: {
     type: "website",
     locale: "en_NG",

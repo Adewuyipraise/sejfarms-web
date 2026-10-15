@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Plus, Minus, ShoppingBag, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { whatsappLink } from "@/lib/whatsapp";
 
 type SanityProduct = {
@@ -66,8 +67,9 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
       if (!item) return prev;
       const nextQuantity = item.quantity + delta;
       if (nextQuantity <= 0) {
-        const { [id]: _, ...rest } = prev;
-        return rest;
+        const next = { ...prev };
+        delete next[id];
+        return next;
       }
       return { ...prev, [id]: { ...item, quantity: nextQuantity } };
     });
@@ -75,8 +77,9 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
 
   function removeItem(id: string) {
     setCart((prev) => {
-      const { [id]: _, ...rest } = prev;
-      return rest;
+      const next = { ...prev };
+      delete next[id];
+      return next;
     });
   }
 
@@ -99,11 +102,11 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
   return (
     <>
       {/* Product grid */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
+      <Stagger className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
         {products.map((product) => {
           const inCart = cart[product._id]?.quantity ?? 0;
           return (
-            <div
+            <StaggerItem
               key={product._id}
               className="flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:shadow-lift"
             >
@@ -175,10 +178,10 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
                   )}
                 </div>
               </div>
-            </div>
+            </StaggerItem>
           );
         })}
-      </div>
+      </Stagger>
 
       {/* Floating cart bar */}
       {totalItems > 0 && (

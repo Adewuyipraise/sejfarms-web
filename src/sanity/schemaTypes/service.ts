@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineField, defineType, type Rule } from "sanity";
 
 export const service = defineType({
   name: "service",
@@ -69,8 +69,8 @@ export const service = defineType({
           type: "object",
           name: "offeringItem",
           fields: [
-            { name: "title", title: "Title", type: "string", validation: (r: any) => r.required() },
-            { name: "description", title: "Description", type: "text", rows: 2, validation: (r: any) => r.required() },
+            { name: "title", title: "Title", type: "string", validation: (r: Rule) => r.required() },
+            { name: "description", title: "Description", type: "text", rows: 2, validation: (r: Rule) => r.required() },
           ],
         },
       ],
@@ -84,9 +84,9 @@ export const service = defineType({
           type: "object",
           name: "processStep",
           fields: [
-            { name: "step", title: "Step Number", type: "string", validation: (r: any) => r.required() },
-            { name: "title", title: "Title", type: "string", validation: (r: any) => r.required() },
-            { name: "description", title: "Description", type: "text", rows: 2, validation: (r: any) => r.required() },
+            { name: "step", title: "Step Number", type: "string", validation: (r: Rule) => r.required() },
+            { name: "title", title: "Title", type: "string", validation: (r: Rule) => r.required() },
+            { name: "description", title: "Description", type: "text", rows: 2, validation: (r: Rule) => r.required() },
           ],
         },
       ],
@@ -100,8 +100,8 @@ export const service = defineType({
           type: "object",
           name: "faq",
           fields: [
-            { name: "q", title: "Question", type: "string", validation: (r: any) => r.required() },
-            { name: "a", title: "Answer", type: "text", rows: 3, validation: (r: any) => r.required() },
+            { name: "q", title: "Question", type: "string", validation: (r: Rule) => r.required() },
+            { name: "a", title: "Answer", type: "text", rows: 3, validation: (r: Rule) => r.required() },
           ],
         },
       ],

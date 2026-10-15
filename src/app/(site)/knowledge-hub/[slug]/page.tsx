@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { PortableText } from "@portabletext/react";
+import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
-import { Heading } from "@/components/ui/heading";
 import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
+import { Reveal } from "@/components/motion/reveal";
 import { sanityFetch } from "@/sanity/fetch";
 import { POST_QUERY, POST_SLUGS_QUERY } from "@/sanity/queries";
+import { parseVideo } from "@/lib/video";
 import { whatsappMessages } from "@/lib/whatsapp";
 
 export const instant = false;
@@ -18,14 +19,16 @@ const youtubeComponents = {
     youtube: ({ value }: { value: { url: string } }) => (
       <div className="my-8 aspect-video w-full overflow-hidden rounded-lg">
         <iframe
-          src={value.url.replace('watch?v=', 'embed/')}
+          src={parseVideo(value.url).embedUrl.replace("?autoplay=1", "")}
+          title="Video"
           className="h-full w-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
       </div>
     ),
   },
-}
+};
 
 
 type Params = { slug: string };
@@ -41,7 +44,7 @@ type SanityPost = {
   publishedAt: string;
   readingTime?: number;
   coverImage?: string;
-  body: any[];
+  body: PortableTextBlock[];
 };
 
 export async function generateStaticParams() {
@@ -106,7 +109,7 @@ async function PostContent({ params }: { params: Promise<Params> }) {
 
       <Section>
         <Container>
-          <div className="mx-auto max-w-3xl">
+          <Reveal className="mx-auto max-w-3xl">
             <div className="mb-8 flex items-center gap-4 border-b border-border pb-6 text-sm text-muted">
               <span>{post.author}</span>
               {post.readingTime && (
@@ -131,7 +134,7 @@ async function PostContent({ params }: { params: Promise<Params> }) {
                 components={youtubeComponents}
               />
             </div>
-          </div>
+          </Reveal>
         </Container>
       </Section>
 

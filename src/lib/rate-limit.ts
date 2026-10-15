@@ -34,11 +34,30 @@ export function rateLimit({
   return { ok: true, remaining: limit - bucket.count, resetAt: bucket.resetAt };
 }
 
-/** Best-effort client IP from request headers. */
+/**
+ * Best-effort client IP from request headers.
+ *
+ * Trust model: on platforms that terminate the connection and *set* the
+ * forwarding header themselves (Vercel, Cloudflare, most reverse proxies) the
+ * first hop is reliable. When the app is exposed directly, a client can spoof
+ * `x-forwarded-for` and evade per-IP limits — pair this with a shared,
+ * server-side limiter (Upstash/Vercel KV) for anything security-sensitive.
+ */
 export function getClientIp(req: Request): string {
+  // Prefer headers that are harder for clients to inject.
+  const vercel = req.headers.get("x-vercel-forwarded-for");
+  if (vercel) return vercel.split(",")[0]!.trim();
+
+  const cf = req.headers.get("cf-connecting-ip");
+  if (cf) return cf.trim();
+
+  const real = req.headers.get("x-real-ip");
+  if (real) return real.trim();
+
   const fwd = req.headers.get("x-forwarded-for");
   if (fwd) return fwd.split(",")[0]!.trim();
-  return req.headers.get("x-real-ip") ?? "unknown";
+
+  return "unknown";
 }
 
 // Periodic cleanup so the Map doesn't grow forever in long-lived processes

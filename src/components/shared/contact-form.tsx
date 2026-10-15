@@ -5,19 +5,30 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { INTEREST_OPTIONS } from "@/types";
 
-const INTERESTS = [
-  "Aquaculture",
-  "Consultancy",
-  "Pond Construction",
-  "Pond Leasing",
-  "Training",
-  "Internship",
-  "Products",
-  "Partnership",
-  "Investment",
-  "Other",
-] as const;
+const INTERESTS = INTEREST_OPTIONS;
+type Interest = (typeof INTEREST_OPTIONS)[number];
+
+/**
+ * Query-string values used across the site (e.g. `/contact?interest=project`)
+ * mapped onto the canonical interest options.
+ */
+const INTEREST_ALIASES: Record<string, Interest> = {
+  project: "Consultancy",
+  organisation: "Partnership",
+  organization: "Partnership",
+  events: "Other",
+  event: "Other",
+};
+
+/** Resolve a `?interest=` value (case-insensitive, alias-aware) to an option. */
+function resolveInterest(value?: string): Interest | undefined {
+  if (!value) return undefined;
+  const key = value.trim().toLowerCase();
+  if (key in INTEREST_ALIASES) return INTEREST_ALIASES[key];
+  return INTERESTS.find((option) => option.toLowerCase() === key);
+}
 
 const schema = z.object({
   interest: z.enum(INTERESTS),
@@ -46,9 +57,7 @@ export function ContactForm({ defaultInterest }: { defaultInterest?: string }) {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      interest: (INTERESTS as readonly string[]).includes(defaultInterest ?? "")
-        ? (defaultInterest as FormValues["interest"])
-        : "Aquaculture",
+      interest: resolveInterest(defaultInterest) ?? "Consultancy",
     },
   });
 
@@ -74,8 +83,8 @@ export function ContactForm({ defaultInterest }: { defaultInterest?: string }) {
           Thank you — your enquiry has been sent.
         </h3>
         <p className="mt-3 text-charcoal/80">
-          We'll get back to you within two business days. For faster response,
-          message us on WhatsApp.
+          We&apos;ll get back to you within two business days. For faster
+          response, message us on WhatsApp.
         </p>
       </div>
     );

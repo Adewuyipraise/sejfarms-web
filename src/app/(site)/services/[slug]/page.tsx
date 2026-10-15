@@ -6,8 +6,9 @@ import { Section } from "@/components/ui/section";
 import { Heading } from "@/components/ui/heading";
 import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { sanityFetch } from "@/sanity/fetch";
-import { SERVICE_BY_SLUG_QUERY } from "@/sanity/queries";
+import { SERVICE_BY_SLUG_QUERY, SERVICE_SLUGS_QUERY } from "@/sanity/queries";
 import { whatsappMessages } from "@/lib/whatsapp";
 
 export const instant = false;
@@ -27,6 +28,14 @@ type SanityServiceDetail = {
   process?: Array<{ step: string; title: string; description: string }>;
   faqs?: Array<{ q: string; a: string }>;
 };
+
+export async function generateStaticParams(): Promise<Params[]> {
+  const slugs = await sanityFetch<string[]>({
+    query: SERVICE_SLUGS_QUERY,
+    tags: ["service"],
+  });
+  return slugs.map((slug) => ({ slug }));
+}
 
 export async function generateMetadata({
   params,
@@ -80,11 +89,11 @@ async function ServiceContent({ params }: { params: Promise<Params> }) {
       {service.overview && (
         <Section>
           <Container>
-            <div className="mx-auto max-w-3xl">
+            <Reveal className="mx-auto max-w-3xl">
               <p className="text-body-lg text-charcoal/80 text-pretty">
                 {service.overview}
               </p>
-            </div>
+            </Reveal>
           </Container>
         </Section>
       )}
@@ -92,18 +101,20 @@ async function ServiceContent({ params }: { params: Promise<Params> }) {
       {service.offering && service.offering.length > 0 && (
         <Section className="bg-white">
           <Container>
-            <Heading level={2}>What We Offer</Heading>
-            <div className="mt-10 grid gap-6 md:grid-cols-2">
+            <Reveal>
+              <Heading level={2}>What We Offer</Heading>
+            </Reveal>
+            <Stagger className="mt-10 grid gap-6 md:grid-cols-2">
               {service.offering.map((o) => (
-                <div
+                <StaggerItem
                   key={o.title}
-                  className="rounded-card border border-border bg-cream p-6"
+                  className="rounded-card border border-border bg-cream p-6 transition-all hover:-translate-y-1 hover:shadow-lift"
                 >
                   <Heading level={4}>{o.title}</Heading>
                   <p className="mt-2 text-sm text-muted">{o.description}</p>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           </Container>
         </Section>
       )}
@@ -111,10 +122,12 @@ async function ServiceContent({ params }: { params: Promise<Params> }) {
       {service.process && service.process.length > 0 && (
         <Section>
           <Container>
-            <Heading level={2}>How We Work</Heading>
-            <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <Reveal>
+              <Heading level={2}>How We Work</Heading>
+            </Reveal>
+            <Stagger className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {service.process.map((p) => (
-                <div key={p.step} className="border-l-2 border-brand pl-5">
+                <StaggerItem key={p.step} className="border-l-2 border-brand pl-5">
                   <p className="font-display text-sm font-semibold text-brand">
                     {p.step}
                   </p>
@@ -122,9 +135,9 @@ async function ServiceContent({ params }: { params: Promise<Params> }) {
                     {p.title}
                   </Heading>
                   <p className="mt-2 text-sm text-muted">{p.description}</p>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           </Container>
         </Section>
       )}
@@ -132,15 +145,17 @@ async function ServiceContent({ params }: { params: Promise<Params> }) {
       {service.faqs && service.faqs.length > 0 && (
         <Section className="bg-white">
           <Container>
-            <Heading level={2}>Frequently Asked Questions</Heading>
+            <Reveal>
+              <Heading level={2}>Frequently Asked Questions</Heading>
+            </Reveal>
             <dl className="mt-10 max-w-3xl divide-y divide-border">
               {service.faqs.map((f) => (
-                <div key={f.q} className="py-6">
+                <Reveal key={f.q} className="py-6">
                   <dt className="font-display font-semibold text-charcoal">
                     {f.q}
                   </dt>
                   <dd className="mt-2 text-muted">{f.a}</dd>
-                </div>
+                </Reveal>
               ))}
             </dl>
           </Container>

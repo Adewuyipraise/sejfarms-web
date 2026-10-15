@@ -6,6 +6,8 @@ import { parseBody } from "next-sanity/webhook";
 type WebhookPayload = {
   _type?: string;
   _id?: string;
+  /** Optional slug, if the Sanity webhook projection includes it. */
+  slug?: string;
   tags?: string[];
 };
 
@@ -42,9 +44,17 @@ export async function POST(req: NextRequest) {
     const tags = new Set<string>();
 
     if (body._type) {
+      // Revalidates every list page for this type (which queries tag = _type).
       tags.add(body._type);
+
+      // …and the matching detail page when we know its slug. Detail pages
+      // query `_type:slug`, so without this they would stay stale.
+      if (body.slug) {
+        tags.add(`${body._type}:${body.slug}`);
+      }
     }
 
+    // Escape hatch: the webhook can pass arbitrary tags to revalidate.
     if (body.tags && Array.isArray(body.tags)) {
       for (const tag of body.tags) {
         if (tag) tags.add(tag);
@@ -52,8 +62,8 @@ export async function POST(req: NextRequest) {
     }
 
     for (const tag of tags) {
-        revalidateTag(tag, "default");
-       }
+      revalidateTag(tag, "default");
+    }
 
     return NextResponse.json({
       revalidated: true,

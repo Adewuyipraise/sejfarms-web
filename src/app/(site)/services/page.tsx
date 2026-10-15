@@ -8,6 +8,8 @@ import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
 import { sanityFetch } from "@/sanity/fetch";
 import { SERVICES_QUERY } from "@/sanity/queries";
+import { Stagger, StaggerItem } from "@/components/motion/reveal";
+import { HashDetailsOpener } from "@/components/shared/hash-details-opener";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -92,16 +94,18 @@ export default async function ServicesPage() {
 
       <Section>
         <Container>
+          <HashDetailsOpener />
           {groups.length === 0 ? (
             <p className="text-center text-muted">
               Services are being finalised. Check back shortly.
             </p>
           ) : (
-            <div className="space-y-4">
+            <Stagger className="space-y-4">
               {groups.map((group) => (
+                <StaggerItem key={group.slug}>
                 <details
-                  key={group.slug}
-                  className="group rounded-card border border-border bg-white transition-all"
+                  id={group.slug}
+                  className="group scroll-mt-28 rounded-card border border-border bg-white transition-all"
                 >
                   <summary className="flex cursor-pointer list-none items-start justify-between gap-4 p-6 md:p-8 [&::-webkit-details-marker]:hidden">
                     <div className="flex items-start gap-5">
@@ -156,8 +160,9 @@ export default async function ServicesPage() {
                     </div>
                   </div>
                 </details>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           )}
         </Container>
       </Section>
