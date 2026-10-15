@@ -1,16 +1,15 @@
-import { defineType, defineField } from 'sanity'
-import { PlayIcon } from '@sanity/icons'
+import { defineType, defineField } from "sanity";
 
 export const youtube = defineType({
-  name: 'youtube',
-  type: 'object',
-  title: 'YouTube Embed',
-  icon: PlayIcon,
+  name: "youtube",
+  type: "object",
+  title: "YouTube Embed",
   fields: [
     defineField({
-      name: 'url',
-      type: 'url',
-      title: 'YouTube video URL',
+      name: "url",
+      type: "url",
+      title: "YouTube video URL",
+      validation: (r) => r.required(),
     }),
   ],
-})
+});
