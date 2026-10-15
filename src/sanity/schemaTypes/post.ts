@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { youtube } from './youtube'
 
 export const post = defineType({
   name: "post",
@@ -88,7 +89,7 @@ export const post = defineType({
       name: "body",
       title: "Body",
       type: "array",
-      of: [{ type: "block" }],
+      of: [{ type: "block" }, { type: 'youtube' }],
     }),
     defineField({
       name: "featured",

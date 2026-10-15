@@ -13,6 +13,21 @@ import { whatsappMessages } from "@/lib/whatsapp";
 
 export const instant = false;
 
+const youtubeComponents = {
+  types: {
+    youtube: ({ value }: { value: { url: string } }) => (
+      <div className="my-8 aspect-video w-full overflow-hidden rounded-lg">
+        <iframe
+          src={value.url.replace('watch?v=', 'embed/')}
+          className="h-full w-full"
+          allowFullScreen
+        />
+      </div>
+    ),
+  },
+}
+
+
 type Params = { slug: string };
 
 type SanityPost = {
@@ -111,7 +126,10 @@ async function PostContent({ params }: { params: Promise<Params> }) {
             </div>
 
             <div className="prose prose-lg max-w-none">
-              <PortableText value={post.body} />
+              <PortableText 
+                value={post.body} 
+                components={youtubeComponents}
+              />
             </div>
           </div>
         </Container>

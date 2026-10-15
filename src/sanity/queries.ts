@@ -36,6 +36,23 @@ export const POST_QUERY = groq`
   }
 `;
 
+export const FEATURED_POSTS_QUERY = groq`
+  *[_type == "post" && featured == true && defined(slug.current)] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    type,
+    category,
+    excerpt,
+    author,
+    publishedAt,
+    readingTime,
+    "coverImage": coverImage.asset->url,
+    featured,
+    externalUrl
+  }
+`;
+
 export const POST_SLUGS_QUERY = groq`
   *[_type == "post" && defined(slug.current)][].slug.current
 `;

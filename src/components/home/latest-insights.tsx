@@ -1,19 +1,33 @@
-import { visiblePosts } from "@/content/posts";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { ArticleCard } from "@/components/shared/article-card";
-import { posts } from "@/content/posts";
+import { sanityFetch } from "@/sanity/fetch";
+import { FEATURED_POSTS_QUERY } from "@/sanity/queries";
 
-export function LatestInsights() {
-  const latest = [...visiblePosts]
-    .sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-    )
-    .slice(0, 3);
+type SanityPost = {
+  _id: string;
+  title: string;
+  slug: string;
+  type: string;
+  category: string;
+  excerpt: string;
+  author: string;
+  publishedAt: string;
+  readingTime?: number;
+  coverImage?: string;
+  featured: boolean;
+};
+
+export async function LatestInsights() {
+  const posts = await sanityFetch<SanityPost[]>({
+    query: FEATURED_POSTS_QUERY,
+    tags: ["post"],
+  });
+
+  const latest = posts.slice(0, 3);
 
   if (latest.length === 0) return null;
 
@@ -33,8 +47,18 @@ export function LatestInsights() {
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {latest.map((p) => (
-            <ArticleCard key={p.slug} post={p} />
+          {latest.map((post) => (
+            <ArticleCard
+              key={post._id}
+              post={{
+                slug: post.slug,
+                title: post.title,
+                excerpt: post.excerpt,
+                category: post.category,
+                readingTime: post.readingTime ?? 0,
+                coverImage: post.coverImage,
+              }}
+            />
           ))}
         </div>
       </Container>
