@@ -2,20 +2,30 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
-import { Card } from "@/components/ui/card";
 import { PageHero } from "@/components/shared/page-hero";
-import { leadership } from "@/content/leadership";
+import { sanityFetch } from "@/sanity/fetch";
+import { LEADERS_QUERY } from "@/sanity/queries";
 
 export const metadata: Metadata = {
   title: "Leadership & Team",
-  description: "The people leading SEJFARMS across its businesses and initiatives.",
+  description:
+    "The people leading Sejfarms Consults Limited across its businesses and initiatives.",
 };
 
-export default function LeadershipPage() {
-  // Hide placeholder leaders from the public page.
-  const verified = leadership.filter(
-    (l) => !l.name.toLowerCase().includes("to be confirmed"),
-  );
+type SanityLeader = {
+  _id: string;
+  name: string;
+  role: string;
+  bio: string;
+  photo?: string;
+  order: number;
+};
+
+export default async function LeadershipPage() {
+  const leaders = await sanityFetch<SanityLeader[]>({
+    query: LEADERS_QUERY,
+    tags: ["leader"],
+  });
 
   return (
     <>
@@ -29,7 +39,7 @@ export default function LeadershipPage() {
 
       <Section>
         <Container>
-          {verified.length === 0 ? (
+          {leaders.length === 0 ? (
             <div className="mx-auto max-w-2xl text-center">
               <p className="text-body-lg text-muted">
                 Leadership information is being finalised. Please check back
@@ -39,10 +49,13 @@ export default function LeadershipPage() {
           ) : (
             <div className="mx-auto max-w-5xl">
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {verified.map((person) => (
-                  <Card key={person.name} className="overflow-hidden p-0">
+                {leaders.map((person) => (
+                  <div
+                    key={person._id}
+                    className="overflow-hidden rounded-card border border-border bg-white"
+                  >
                     <div className="relative aspect-square bg-brand/10">
-                      {person.photo && (
+                      {person.photo ? (
                         <Image
                           src={person.photo}
                           alt={person.name}
@@ -50,6 +63,10 @@ export default function LeadershipPage() {
                           className="object-cover"
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         />
+                      ) : (
+                        <div className="flex h-full items-center justify-center font-display text-4xl font-bold text-brand/30">
+                          {person.name.charAt(0)}
+                        </div>
                       )}
                     </div>
                     <div className="p-5">
@@ -61,7 +78,7 @@ export default function LeadershipPage() {
                       </p>
                       <p className="mt-2 text-sm text-muted">{person.bio}</p>
                     </div>
-                  </Card>
+                  </div>
                 ))}
               </div>
             </div>

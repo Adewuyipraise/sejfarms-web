@@ -408,3 +408,27 @@ export const PROJECT_BY_SLUG_QUERY = groq`
 export const PROJECT_SLUGS_QUERY = groq`
   *[_type == "project" && defined(slug.current)][].slug.current
 `;
+
+
+// ---------- Leadership ----------
+export const LEADERS_QUERY = groq`
+  *[_type == "leader"] | order(order asc) {
+    _id,
+    name,
+    role,
+    bio,
+    "photo": photo.asset->url,
+    order
+  }
+`;
+
+// ---------- FAQs ----------
+export const FAQS_QUERY = groq`
+  *[_type == "faq"] | order(category asc, order asc) {
+    _id,
+    question,
+    answer,
+    category,
+    order
+  }
+`;

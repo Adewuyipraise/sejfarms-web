@@ -3,14 +3,31 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
-import { faqs, faqCategories } from "@/content/faqs";
+import { sanityFetch } from "@/sanity/fetch";
+import { FAQS_QUERY } from "@/sanity/queries";
 
 export const metadata: Metadata = {
   title: "FAQs",
   description: "Frequently asked questions about Sejfarms Consults Limited.",
 };
 
-export default function FAQsPage() {
+type SanityFAQ = {
+  _id: string;
+  question: string;
+  answer: string;
+  category: string;
+  order: number;
+};
+
+export default async function FAQsPage() {
+  const faqs = await sanityFetch<SanityFAQ[]>({
+    query: FAQS_QUERY,
+    tags: ["faq"],
+  });
+
+  // Group by category while preserving order
+  const categories = Array.from(new Set(faqs.map((f) => f.category)));
+
   return (
     <>
       <PageHero
@@ -23,27 +40,35 @@ export default function FAQsPage() {
 
       <Section>
         <Container>
-          <div className="mx-auto max-w-3xl">
-            {faqCategories.map((cat) => {
-              const items = faqs.filter((f) => f.category === cat);
-              if (items.length === 0) return null;
-              return (
-                <div key={cat} className="mb-12 last:mb-0">
-                  <h2 className="font-display text-h3 font-semibold">{cat}</h2>
-                  <dl className="mt-6 divide-y divide-border border-t border-border">
-                    {items.map((f) => (
-                      <div key={f.question} className="py-6">
-                        <dt className="font-display font-semibold text-charcoal">
-                          {f.question}
-                        </dt>
-                        <dd className="mt-2 text-muted">{f.answer}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </div>
-              );
-            })}
-          </div>
+          {faqs.length === 0 ? (
+            <p className="text-center text-muted">
+              FAQs are being finalised. Check back shortly.
+            </p>
+          ) : (
+            <div className="mx-auto max-w-3xl">
+              {categories.map((cat) => {
+                const items = faqs.filter((f) => f.category === cat);
+                if (items.length === 0) return null;
+                return (
+                  <div key={cat} className="mb-12 last:mb-0">
+                    <h2 className="font-display text-h3 font-semibold">
+                      {cat}
+                    </h2>
+                    <dl className="mt-6 divide-y divide-border border-t border-border">
+                      {items.map((f) => (
+                        <div key={f._id} className="py-6">
+                          <dt className="font-display font-semibold text-charcoal">
+                            {f.question}
+                          </dt>
+                          <dd className="mt-2 text-muted">{f.answer}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </Container>
       </Section>
 

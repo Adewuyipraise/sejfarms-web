@@ -11,7 +11,9 @@ import { siteSettings } from "./siteSettings";
 import { service } from "./service";
 import { subsidiary } from "./subsidiary";
 import { project } from "./project";
-import { youtube } from "./youtube"; 
+import { youtube } from "./youtube";
+import { leader } from "./leader";       
+import { faq } from "./faq";             
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -27,5 +29,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     subsidiary,
     project,
     youtube,
+    leader,                              
+    faq,                                 
   ],
 };
