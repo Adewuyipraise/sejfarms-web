@@ -99,7 +99,7 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
   return (
     <>
       {/* Product grid */}
-      <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
         {products.map((product) => {
           const inCart = cart[product._id]?.quantity ?? 0;
           return (
@@ -108,58 +108,58 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
               className="flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:shadow-lift"
             >
               {product.image ? (
-                <div className="relative aspect-[4/3] overflow-hidden bg-brand/5">
+                <div className="relative aspect-square overflow-hidden bg-brand/5 sm:aspect-[4/3]">
                   <Image
                     src={product.image}
                     alt={product.name}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 768px) 50vw, 25vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   />
                 </div>
               ) : (
-                <div className="relative aspect-[4/3] bg-brand/5" />
+                <div className="relative aspect-square bg-brand/5 sm:aspect-[4/3]" />
               )}
-              <div className="flex flex-1 flex-col p-4">
-                <span className="text-xs font-semibold uppercase tracking-wider text-brand">
+              <div className="flex flex-1 flex-col p-3 sm:p-4">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-brand sm:text-xs">
                   {product.category}
                 </span>
-                <h3 className="mt-1.5 font-display text-base font-semibold text-charcoal">
+                <h3 className="mt-1 font-display text-sm font-semibold leading-tight text-charcoal sm:mt-1.5 sm:text-base">
                   {product.name}
                 </h3>
-                <p className="mt-2 line-clamp-2 flex-1 text-xs text-muted">
+                <p className="mt-1.5 line-clamp-2 flex-1 text-[11px] text-muted sm:mt-2 sm:text-xs">
                   {product.description}
                 </p>
-                <p className="mt-3 font-display text-lg font-bold text-charcoal">
+                <p className="mt-2 font-display text-base font-bold text-charcoal sm:mt-3 sm:text-lg">
                   ₦{product.price.toLocaleString()}
-                  <span className="ml-1.5 text-xs font-normal text-muted">
+                  <span className="ml-1 text-[10px] font-normal text-muted sm:ml-1.5 sm:text-xs">
                     / {product.unit}
                   </span>
                 </p>
                 {product.sizes && product.sizes.length > 0 && (
-                  <p className="mt-1 text-xs text-muted">
+                  <p className="mt-1 text-[10px] text-muted sm:text-xs">
                     Sizes: {product.sizes.join(" · ")}
                   </p>
                 )}
-                <div className="mt-4">
+                <div className="mt-3 sm:mt-4">
                   {inCart > 0 ? (
                     <div className="flex items-center justify-between rounded-button border border-brand bg-brand/5">
                       <button
                         onClick={() => updateQuantity(product._id, -1)}
-                        className="flex h-10 w-10 items-center justify-center text-brand hover:bg-brand/10"
+                        className="flex h-8 w-8 items-center justify-center text-brand hover:bg-brand/10 sm:h-10 sm:w-10"
                         aria-label="Decrease quantity"
                       >
-                        <Minus className="h-4 w-4" />
+                        <Minus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </button>
-                      <span className="font-display text-sm font-semibold text-brand">
-                        {inCart} in cart
+                      <span className="font-display text-xs font-semibold text-brand sm:text-sm">
+                        {inCart}
                       </span>
                       <button
                         onClick={() => updateQuantity(product._id, 1)}
-                        className="flex h-10 w-10 items-center justify-center text-brand hover:bg-brand/10"
+                        className="flex h-8 w-8 items-center justify-center text-brand hover:bg-brand/10 sm:h-10 sm:w-10"
                         aria-label="Increase quantity"
                       >
-                        <Plus className="h-4 w-4" />
+                        <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </button>
                     </div>
                   ) : (
@@ -169,8 +169,8 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
                       variant="primary"
                       className="w-full"
                     >
-                      <Plus className="mr-1 h-4 w-4" />
-                      Add to Cart
+                      <Plus className="mr-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                      <span className="text-xs sm:text-sm">Add to Cart</span>
                     </Button>
                   )}
                 </div>
