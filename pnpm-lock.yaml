@@ -175,6 +175,9 @@ importers:
       '@sanity/client':
         specifier: ^8.9.0
         version: 8.9.0
+      '@sanity/icons':
+        specifier: ^5.2.3
+        version: 5.2.3(react@19.3.0)
       '@sanity/image-url':
         specifier: ^2.1.1
         version: 2.1.1
@@ -2839,6 +2842,7 @@ packages:
   '@sanity/ui@4.3.3':
     resolution: {integrity: sha512-tBBvyvJXlpX4gvfCW80/ThDB/UE23KL3CJbYkvI/vR70frSUIJyHZBgzRomX0FSAkpfar+OopNpF08dIilQukQ==}
     engines: {node: '>=22.12'}
+    deprecated: Class names collide with @sanity/ui 4.4.4 (shipped in sanity@6.19.0) when both load on one page, breaking styles. Upgrade to @sanity/ui@^4.4.4.
     peerDependencies:
       react: ^19.2
       react-dom: ^19.2

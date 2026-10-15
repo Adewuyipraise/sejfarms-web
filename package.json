@@ -12,6 +12,7 @@
     "@hookform/resolvers": "^5.9.1",
     "@portabletext/react": "^8.0.1",
     "@sanity/client": "^8.9.0",
+    "@sanity/icons": "^5.2.3",
     "@sanity/image-url": "^2.1.1",
     "@sanity/vision": "^5.31.2",
     "class-variance-authority": "^0.7.1",
