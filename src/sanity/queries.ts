@@ -22,6 +22,13 @@ export const POSTS_QUERY = groq`
     publishedAt,
     readingTime,
     "coverImage": coverImage.asset->url,
+    body[] {
+      ...,
+      _type == "image" => {
+        ...,
+        "url": asset->url
+      }
+    },
     featured,
     externalUrl
   }
