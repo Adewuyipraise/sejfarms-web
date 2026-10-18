@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export function MosneriNavbar() {
   return (
@@ -9,6 +10,14 @@ export function MosneriNavbar() {
         <Link href="/" className="flex items-center gap-2 font-display text-xl font-bold">
           <span className="text-mosneri-orange">Mosneri</span>
           <span className="text-white">foods</span>
+          <Image
+                      src="/images/businesses/mosnerifoods.jpg"
+                      alt="Mosnerifoods Logo"
+                      width={200}
+                      height={52}
+                      priority
+                      className="h-10 w-auto md:h-16"
+          />
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex">

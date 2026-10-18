@@ -3,7 +3,7 @@ import { createClient } from "@sanity/client";
 
 export async function POST(req: Request) {
   try {
-    // 1. Verify the request comes from Sanity
+    // 1. Verify secret
     const authHeader = req.headers.get("authorization");
     if (authHeader !== `Bearer ${process.env.SANITY_REVALIDATE_SECRET}`) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -11,64 +11,57 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     
-    // 2. We only care about POSTS
+    // 2. Only care about posts
     if (body._type !== "post") return NextResponse.json({ ok: true });
 
-    // 3. Initialize Sanity Client with Write Access
+    // 3. Setup Sanity Client
     const client = createClient({
       projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
       dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
       apiVersion: "2026-01-01",
-      token: process.env.SANITY_API_WRITE_TOKEN!, // Needs Write Access
+      token: process.env.SANITY_API_WRITE_TOKEN!,
       useCdn: false,
     });
 
-    // 4. Fetch the full post to look at its body
+    // 4. Fetch the post
     const post = await client.getDocument(body._id);
     
-    // Guard clauses: Ensure post exists, has a body, and has a slug
     if (!post || !post.body || !post.slug?.current) {
-      return NextResponse.json({ ok: true, message: "No body or slug found" });
+      return NextResponse.json({ ok: true, message: "Missing data" });
     }
 
-    // 5. Find all image blocks in the portable text body
+    // 5. Extract images
     const images = post.body.filter((block: any) => block._type === "image");
 
-    // If no images, do nothing
     if (images.length === 0) {
-      return NextResponse.json({ ok: true, message: "No images found in body" });
+      return NextResponse.json({ ok: true, message: "No images" });
     }
 
-    // 6. Create the Gallery Album structure
+    // 6. Create the album
     const album = {
       _type: "galleryAlbum",
       _id: `gallery-sync-${post._id}`, 
       title: `Post Images: ${post.title}`,
-      slug: { _type: "slug", current: `post-images-${post.slug.current}` },
+      slug: { _type: "slug", current: `post-images-${post.slug.current}-${Date.now().toString().slice(-4)}` }, // Ensures unique slug
       description: `Automatically generated from the post: ${post.title}`,
       category: "Other", 
       year: new Date(post.publishedAt || Date.now()).getFullYear(),
-      // The schema expects a direct Sanity reference for the cover image
       coverImage: images[0].asset, 
-      // The schema expects a flat array of images for the gallery
       images: images.map((img: any) => ({
         _type: "image",
-        _key: img._key || Math.random().toString(36).substring(7), // Ensure unique key
+        _key: img._key || Math.random().toString(36).substring(7),
         asset: img.asset,
         caption: img.caption || ""
       }))
     };
 
-    // 7. Save the album to Sanity (createIfNotExists prevents duplicate errors if you re-publish)
-    await client.createIfNotExists(album);
+    // 7. Save to Sanity
+    await client.createOrReplace(album);
 
-    return NextResponse.json({ ok: true, message: "Album synced successfully" });
+    return NextResponse.json({ ok: true, message: "Synced successfully" });
 
-  } catch (error) {
-    console.error("Gallery sync error:", error);
-    return NextResponse.json(
-      { message: "Internal server error" }, 
-      { status: 500 }
-    );
+  } catch (error: any) {
+    console.error("Gallery sync error:", error.message);
+    return NextResponse.json({ message: "Internal error" }, { status: 500 });
   }
 }

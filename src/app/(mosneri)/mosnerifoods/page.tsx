@@ -23,7 +23,13 @@ export default async function MosneriLandingPage() {
       {/* 1. Hero Section */}
       <section className="relative overflow-hidden bg-mosneri-black py-10 text-white md:py-10">
         <div className="absolute inset-0 bg-gradient-to-br from-mosneri-black via-mosneri-black to-mosneri-red/20" />
-        
+        <Image 
+          src="/logos/mosnerifoods.jpg" 
+          alt="Mosnerifoods" 
+          fill 
+          priority
+          className="absolute inset-0 object-cover w-full h-full opacity-20" 
+        />
         <Container className="relative">
           {/*<span className="inline-block rounded-full bg-mosneri-orange/10 px-4 py-1.5 text-sm font-semibold text-mosneri-orange">
             Sejfarms Group Subsidiary

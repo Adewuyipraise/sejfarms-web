@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
-import { Reveal } from "@/components/motion/reveal";
+import { PostImageGallery } from "@/components/shared/post-image-gallery";
 import { sanityFetch } from "@/sanity/fetch";
 import { POST_QUERY, POST_SLUGS_QUERY } from "@/sanity/queries";
 import { parseVideo } from "@/lib/video";
@@ -18,27 +18,7 @@ export const instant = false;
 // Custom renderer for images and videos inside the Portable Text body
 const customComponents = {
   types: {
-    image: ({ value }: any) => {
-      if (!value?.url) return null;
-      return (
-        <figure className="my-8">
-          <div className="relative aspect-video w-full overflow-hidden rounded-card bg-brand/5">
-            <Image
-              src={value.url}
-              alt={value.alt || "Article image"}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 800px"
-            />
-          </div>
-          {value.caption && (
-            <figcaption className="mt-3 text-center text-sm text-muted">
-              {value.caption}
-            </figcaption>
-          )}
-        </figure>
-      );
-    },
+
     youtube: ({ value }: { value: { url: string } }) => (
       <div className="my-8 aspect-video w-full overflow-hidden rounded-lg">
         <iframe
@@ -119,6 +99,17 @@ async function PostContent({ params }: { params: Promise<Params> }) {
   });
   
   if (!post) notFound();
+  
+  
+  // EXTRACT IMAGES FROM BODY
+  const postImages = post.body
+    .filter((block: any) => block._type === "image")
+    .map((block: any) => ({
+      url: block.url,
+      alt: block.alt,
+      caption: block.caption,
+    }));
+
 
   return (
     <>
@@ -132,7 +123,7 @@ async function PostContent({ params }: { params: Promise<Params> }) {
 
       <Section>
         <Container>
-          <Reveal className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-3xl">
             <div className="mb-8 flex items-center gap-4 border-b border-border pb-6 text-sm text-muted">
               <span>{post.author}</span>
               {post.readingTime && (
@@ -157,7 +148,10 @@ async function PostContent({ params }: { params: Promise<Params> }) {
                 components={customComponents}
               />
             </div>
-          </Reveal>
+
+            <PostImageGallery images={postImages} />
+
+          </div>
         </Container>
       </Section>
 
