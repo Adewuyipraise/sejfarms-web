@@ -7,8 +7,9 @@ import { Resend } from "resend";
 export const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const fromAddress =
-  process.env.RESEND_FROM ?? "Sejfarms Website <onboarding@resend.dev>";
+  process.env.RESEND_FROM ?? "Sejfarms Website <noreply@contact.sejfarmsgroup.com>";
 
 /** Inbox that receives website enquiries, applications and submissions. */
 export const inbox =
   process.env.CONTACT_INBOX ?? "sejfarmsconsultltd@gmail.com";
+
