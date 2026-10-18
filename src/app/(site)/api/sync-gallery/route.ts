@@ -42,6 +42,7 @@ export async function POST(req: Request) {
     // 6. Create the Gallery Album structure
     const album = {
       _type: "galleryAlbum",
+      _id: `gallery-sync-${post._id}`, 
       title: `Post Images: ${post.title}`,
       slug: { _type: "slug", current: `post-images-${post.slug.current}` },
       description: `Automatically generated from the post: ${post.title}`,
