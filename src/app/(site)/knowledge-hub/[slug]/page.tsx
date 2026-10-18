@@ -11,11 +11,34 @@ import { sanityFetch } from "@/sanity/fetch";
 import { POST_QUERY, POST_SLUGS_QUERY } from "@/sanity/queries";
 import { parseVideo } from "@/lib/video";
 import { whatsappMessages } from "@/lib/whatsapp";
+import Image from "next/image";
 
 export const instant = false;
 
-const youtubeComponents = {
+// Custom renderer for images and videos inside the Portable Text body
+const customComponents = {
   types: {
+    image: ({ value }: any) => {
+      if (!value?.url) return null;
+      return (
+        <figure className="my-8">
+          <div className="relative aspect-video w-full overflow-hidden rounded-card bg-brand/5">
+            <Image
+              src={value.url}
+              alt={value.alt || "Article image"}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 800px"
+            />
+          </div>
+          {value.caption && (
+            <figcaption className="mt-3 text-center text-sm text-muted">
+              {value.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+    },
     youtube: ({ value }: { value: { url: string } }) => (
       <div className="my-8 aspect-video w-full overflow-hidden rounded-lg">
         <iframe
@@ -29,7 +52,6 @@ const youtubeComponents = {
     ),
   },
 };
-
 
 type Params = { slug: string };
 
@@ -95,6 +117,7 @@ async function PostContent({ params }: { params: Promise<Params> }) {
     params: { slug },
     tags: [`post:${slug}`],
   });
+  
   if (!post) notFound();
 
   return (
@@ -131,7 +154,7 @@ async function PostContent({ params }: { params: Promise<Params> }) {
             <div className="prose prose-lg max-w-none">
               <PortableText 
                 value={post.body} 
-                components={youtubeComponents}
+                components={customComponents}
               />
             </div>
           </Reveal>

@@ -28,7 +28,7 @@ export const POSTS_QUERY = groq`
 `;
 
 export const POST_QUERY = groq`
-  *[_type == "post" && slug.current == $slug && ${PUBLISHED_FILTER}][0] {
+  *[_type == "post" && slug.current == $slug][0] {
     _id,
     title,
     "slug": slug.current,
@@ -39,7 +39,13 @@ export const POST_QUERY = groq`
     publishedAt,
     readingTime,
     "coverImage": coverImage.asset->url,
-    body,
+    body[] {
+      ...,
+      _type == "image" => {
+        ...,
+        "url": asset->url
+      }
+    },
     featured,
     externalUrl
   }
@@ -472,3 +478,4 @@ export const TRAINING_PARTNERS_QUERY = groq`
     "logo": logo.asset->url
   }
 `;
+

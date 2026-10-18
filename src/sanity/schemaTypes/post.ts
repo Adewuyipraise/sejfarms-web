@@ -88,7 +88,25 @@ export const post = defineType({
       name: "body",
       title: "Body",
       type: "array",
-      of: [{ type: "block" }, { type: 'youtube' }],
+      of: [
+        { type: "block" }, 
+        { type: 'youtube' }, 
+        { 
+          type: "image", 
+          options: { hotspot: true },
+          fields: [
+            {
+              name: "caption",
+              title: "Caption",
+              type: "string",
+            },
+            {
+              name: "alt",
+              title: "Alt Text (for accessibility)",
+              type: "string",
+            }
+          ]
+        }], 
     }),
     defineField({
       name: "featured",
