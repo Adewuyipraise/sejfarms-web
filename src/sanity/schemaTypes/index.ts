@@ -10,6 +10,7 @@ import { jobPosting } from "./jobPosting";
 import { siteSettings } from "./siteSettings";
 import { service } from "./service";
 import { subsidiary } from "./subsidiary";
+import { trainingPartner } from "./trainingPartner";
 import { project } from "./project";
 import { youtube } from "./youtube";
 import { leader } from "./leader";       
@@ -27,6 +28,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     siteSettings,
     service,
     subsidiary,
+    trainingPartner,
     project,
     youtube,
     leader,                              

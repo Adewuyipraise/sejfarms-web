@@ -41,7 +41,7 @@ export const post = defineType({
         list: [
           "Aquaculture",
           "Farm Management",
-          "Value Addition",
+          "Mosnerifoods",
           "Training",
           "Company News",
           "Partnership",

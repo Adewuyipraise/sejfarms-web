@@ -18,6 +18,14 @@
   --color-muted: #6B6B6B;
   --color-border: #E5E0D8;
 
+  /* Mosnerifoods Brand Colors */
+  --color-mosneri-orange: #F26522; /* Primary Brand */
+  --color-mosneri-black: #1A1A1A;
+  --color-mosneri-red: #D32F2F;
+  --color-mosneri-yellow: #FBC02D;
+
+
+
   /* === FONTS === */
   /* Wired to the next/font variables in layout.tsx. Keep these names
      distinct from the next/font variable names to avoid a circular

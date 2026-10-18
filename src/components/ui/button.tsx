@@ -12,6 +12,7 @@ const buttonStyles = cva(
         ghost:    "text-charcoal hover:text-brand hover:bg-brand/5",
         whatsapp: "bg-[#25D366] text-white hover:bg-[#1DA851] shadow-soft",
         outline:  "border border-charcoal/20 text-charcoal hover:border-charcoal hover:bg-charcoal/5",
+        mosneri:  "bg-mosneri-orange text-white hover:bg-mosneri-orange/90 shadow-soft hover:shadow-lift", // Added this
       },
       size: {
         sm: "h-9  px-4 text-sm",
@@ -22,6 +23,7 @@ const buttonStyles = cva(
     defaultVariants: { variant: "primary", size: "md" },
   },
 );
+
 
 type ButtonProps = VariantProps<typeof buttonStyles> & {
   href?: string;

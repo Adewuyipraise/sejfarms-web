@@ -447,3 +447,28 @@ export const FAQS_QUERY = groq`
     order
   }
 `;
+
+
+// ---------- Mosnerifoods Page ----------
+export const MOSNERI_POSTS_QUERY = groq`
+  *[_type == "post" && category == "Mosnerifoods" && defined(slug.current)] | order(publishedAt desc)[0...3] {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    "coverImage": coverImage.asset->url
+  }
+`;
+
+
+// ---------- Training Partners Page ----------
+export const TRAINING_PARTNERS_QUERY = groq`
+  *[_type == "trainingPartner"] | order(order asc) {
+    _id,
+    name,
+    program,
+    year,
+    "logo": logo.asset->url
+  }
+`;

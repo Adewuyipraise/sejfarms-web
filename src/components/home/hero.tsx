@@ -18,7 +18,7 @@ export function Hero() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/70 via-brand-dark/90 to-brand-dark/100" />
 
-      <Container className="relative flex min-h-[85vh] flex-col justify-center py-24 md:py-32">
+      <Container className="relative flex min-h-[85vh] flex-col justify-center py-24 md:py-16">
         <Eyebrow className="animate-rise text-base font-semibold tracking-[0.18em] text-accent md:text-lg">
           {site.name}
         </Eyebrow>

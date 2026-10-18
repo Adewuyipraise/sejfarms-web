@@ -6,6 +6,7 @@ import { Plus, Minus, ShoppingBag, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { whatsappLink } from "@/lib/whatsapp";
+import { cn } from "@/lib/utils";
 
 type SanityProduct = {
   _id: string;
@@ -25,9 +26,18 @@ type CartItem = {
   quantity: number;
 };
 
-export function ProductCart({ products }: { products: SanityProduct[] }) {
+export function ProductCart({
+  products,
+  theme = "sejfarms",
+}: {
+  products: SanityProduct[];
+  theme?: "sejfarms" | "mosneri";
+}) {
   const [cart, setCart] = useState<Record<string, CartItem>>({});
   const [open, setOpen] = useState(false);
+
+  // Define isMosneri here, before it is used in the JSX
+  const isMosneri = theme === "mosneri";
 
   const items = Object.values(cart);
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
@@ -36,7 +46,6 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
     0,
   );
 
-  // Flag the body when cart has items so the WhatsApp float can shift up
   useEffect(() => {
     if (totalItems > 0) {
       document.body.dataset.cartActive = "true";
@@ -111,7 +120,7 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
               className="flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:shadow-lift"
             >
               {product.image ? (
-                <div className="relative aspect-square overflow-hidden bg-brand/5 sm:aspect-[4/3]">
+                <div className="relative aspect-square overflow-hidden bg-gray-100 sm:aspect-[4/3]">
                   <Image
                     src={product.image}
                     alt={product.name}
@@ -121,10 +130,10 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
                   />
                 </div>
               ) : (
-                <div className="relative aspect-square bg-brand/5 sm:aspect-[4/3]" />
+                <div className="relative aspect-square bg-gray-100 sm:aspect-[4/3]" />
               )}
               <div className="flex flex-1 flex-col p-3 sm:p-4">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-brand sm:text-xs">
+                <span className={cn("text-[10px] font-semibold uppercase tracking-wider sm:text-xs", isMosneri ? "text-mosneri-orange" : "text-brand")}>
                   {product.category}
                 </span>
                 <h3 className="mt-1 font-display text-sm font-semibold leading-tight text-charcoal sm:mt-1.5 sm:text-base">
@@ -146,20 +155,20 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
                 )}
                 <div className="mt-3 sm:mt-4">
                   {inCart > 0 ? (
-                    <div className="flex items-center justify-between rounded-button border border-brand bg-brand/5">
+                    <div className={cn("flex items-center justify-between rounded-button border", isMosneri ? "border-mosneri-orange bg-mosneri-orange/5" : "border-brand bg-brand/5")}>
                       <button
                         onClick={() => updateQuantity(product._id, -1)}
-                        className="flex h-8 w-8 items-center justify-center text-brand hover:bg-brand/10 sm:h-10 sm:w-10"
+                        className={cn("flex h-8 w-8 items-center justify-center sm:h-10 sm:w-10", isMosneri ? "text-mosneri-orange hover:bg-mosneri-orange/10" : "text-brand hover:bg-brand/10")}
                         aria-label="Decrease quantity"
                       >
                         <Minus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </button>
-                      <span className="font-display text-xs font-semibold text-brand sm:text-sm">
+                      <span className={cn("font-display text-xs font-semibold sm:text-sm", isMosneri ? "text-mosneri-orange" : "text-brand")}>
                         {inCart}
                       </span>
                       <button
                         onClick={() => updateQuantity(product._id, 1)}
-                        className="flex h-8 w-8 items-center justify-center text-brand hover:bg-brand/10 sm:h-10 sm:w-10"
+                        className={cn("flex h-8 w-8 items-center justify-center sm:h-10 sm:w-10", isMosneri ? "text-mosneri-orange hover:bg-mosneri-orange/10" : "text-brand hover:bg-brand/10")}
                         aria-label="Increase quantity"
                       >
                         <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -169,7 +178,7 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
                     <Button
                       onClick={() => addToCart(product)}
                       size="sm"
-                      variant="primary"
+                      variant={isMosneri ? "mosneri" : "primary"}
                       className="w-full"
                     >
                       <Plus className="mr-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -191,7 +200,7 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
               onClick={() => setOpen(true)}
               className="flex items-center gap-3 text-left"
             >
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-brand text-white">
+              <span className={cn("inline-flex h-11 w-11 items-center justify-center rounded-full", isMosneri ? "bg-mosneri-black text-mosneri-orange" : "bg-brand text-white")}>
                 <ShoppingBag className="h-5 w-5" />
               </span>
               <div>
@@ -206,9 +215,9 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
 
             <Button
               href={whatsappLink(buildOrderMessage(), "mosnerifoods")}
-              variant="whatsapp"
               size="lg"
               external
+              variant={isMosneri ? "mosneri" : "whatsapp"}
             >
               Order Now on WhatsApp
             </Button>
@@ -233,7 +242,7 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close"
-                className="rounded-full p-2 text-muted hover:bg-brand/5 hover:text-charcoal"
+                className={cn("rounded-full p-2 text-muted", isMosneri ? "hover:bg-mosneri-orange/5" : "hover:bg-brand/5")}
               >
                 <X className="h-5 w-5" />
               </button>
@@ -252,7 +261,7 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
                       className="flex gap-4 border-b border-border pb-4 last:border-0"
                     >
                       {product.image && (
-                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-brand/5">
+                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
                           <Image
                             src={product.image}
                             alt={product.name}
@@ -272,7 +281,7 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
                         <div className="mt-2 flex items-center gap-3">
                           <button
                             onClick={() => updateQuantity(product._id, -1)}
-                            className="flex h-7 w-7 items-center justify-center rounded border border-border hover:bg-brand/5"
+                            className={cn("flex h-7 w-7 items-center justify-center rounded border border-border", isMosneri ? "hover:bg-mosneri-orange/5" : "hover:bg-brand/5")}
                             aria-label="Decrease"
                           >
                             <Minus className="h-3 w-3" />
@@ -282,7 +291,7 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
                           </span>
                           <button
                             onClick={() => updateQuantity(product._id, 1)}
-                            className="flex h-7 w-7 items-center justify-center rounded border border-border hover:bg-brand/5"
+                            className={cn("flex h-7 w-7 items-center justify-center rounded border border-border", isMosneri ? "hover:bg-mosneri-orange/5" : "hover:bg-brand/5")}
                             aria-label="Increase"
                           >
                             <Plus className="h-3 w-3" />
@@ -313,9 +322,9 @@ export function ProductCart({ products }: { products: SanityProduct[] }) {
                 </div>
                 <Button
                   href={whatsappLink(buildOrderMessage(), "mosnerifoods")}
-                  variant="whatsapp"
                   size="lg"
                   external
+                  variant={isMosneri ? "mosneri" : "whatsapp"}
                   className="w-full"
                 >
                   Order on WhatsApp

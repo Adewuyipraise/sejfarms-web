@@ -8,7 +8,7 @@ export function MetricStrip() {
   if (verifiedMetrics.length === 0) return null;
 
   return (
-    <Section className="border-b border-border bg-white py-16 md:py-20">
+    <Section className="border-b border-border bg-white py-16 md:py-14">
       <Container>
         <Reveal>
           <p className="text-center font-display text-h3 font-semibold text-charcoal">

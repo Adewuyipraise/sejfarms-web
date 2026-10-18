@@ -47,7 +47,7 @@ export function Navbar() {
           : "bg-cream",
       )}
     >
-      <Container className="flex h-16 items-center justify-between md:h-24">
+      <Container className="flex h-16 items-center justify-between md:h-20">
         <Link href="/" className="flex items-center">
           <Image
             src="/logos/sejfarms-logo.png"
