@@ -11,13 +11,20 @@ export type ArticleCardPost = {
   category: string;
   readingTime?: number;
   coverImage?: string;
+  externalUrl?: string;
 };
 
 export function ArticleCard({ post }: { post: ArticleCardPost }) {
+  // If there's an external URL, use it and open in a new tab
+  const href = post.externalUrl || `/knowledge-hub/${post.slug}`;
+  const isExternal = !!post.externalUrl;
+
   return (
     <Link
-      href={`/knowledge-hub/${post.slug}`}
-      className="group flex w-full flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
+      href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+      className="group flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
     >
       {post.coverImage && (
         <div className="relative aspect-[16/9] overflow-hidden bg-brand/10">
@@ -40,9 +47,11 @@ export function ArticleCard({ post }: { post: ArticleCardPost }) {
         <p className="mt-3 flex-1 text-sm text-muted">{post.excerpt}</p>
         <div className="mt-6 flex items-center justify-between text-xs text-muted">
           {post.readingTime && <span>{post.readingTime} min read</span>}
-          <span className="inline-flex items-center gap-1 font-semibold text-brand">
-            Read <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+          <span className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-brand">
+            {isExternal ? "View Original" : "Read"} 
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
           </span>
+    
         </div>
       </div>
     </Link>

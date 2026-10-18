@@ -36,7 +36,13 @@ export async function GET(req: Request) {
       description: `Automatically generated from the post: ${post.title}`,
       category: "Other", 
       year: new Date(post.publishedAt || Date.now()).getFullYear(),
-      coverImage: images[0].asset, 
+      coverImage: {
+        _type: "image",
+        asset: { 
+          _type: "reference", 
+          _ref: images[0].asset._ref 
+        }
+      }, 
       images: images.map((img: any) => ({
         _type: "image",
         _key: img._key || Math.random().toString(36).substring(7),
