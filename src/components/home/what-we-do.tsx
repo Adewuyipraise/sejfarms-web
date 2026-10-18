@@ -8,6 +8,7 @@ import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { sanityFetch } from "@/sanity/fetch";
 import { SERVICES_QUERY } from "@/sanity/queries";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 
 type SanityService = {
   _id: string;
@@ -88,7 +89,7 @@ export async function WhatWeDo() {
   return (
     <Section>
       <Container>
-        <div className="max-w-2xl">
+        <Reveal className="max-w-2xl">
           <Eyebrow>What We Do</Eyebrow>
           <Heading level={2} className="mt-4">
             Comprehensive Aquaculture Solutions
@@ -98,14 +99,14 @@ export async function WhatWeDo() {
             and producing stock through to training, value addition and market
             access.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Stagger className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {groups.map((group) => (
+            <StaggerItem key={group.slug} className="flex">
             <Link
-              key={group.slug}
               href={`/services#${group.slug}`}
-              className="group flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
+              className="group flex w-full flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
             >
               {group.image && (
                 <div className="relative aspect-[16/9] overflow-hidden bg-brand/10">
@@ -137,23 +138,26 @@ export async function WhatWeDo() {
                 </span>
               </div>
             </Link>
+            </StaggerItem>
           ))}
 
-          <div className="flex flex-col justify-center rounded-card border border-dashed border-brand/30 bg-brand/5 p-6">
-            <h3 className="font-display text-h4 font-semibold text-charcoal">
-              See all services
-            </h3>
-            <p className="mt-2 text-sm text-muted">
-              Browse the full catalogue with detailed descriptions for each
-              service.
-            </p>
-            <div className="mt-6">
-              <Button href="/services" variant="primary" size="md">
-                All Services
-              </Button>
+          <StaggerItem className="flex">
+            <div className="flex w-full flex-col justify-center rounded-card border border-dashed border-brand/30 bg-brand/5 p-6">
+              <h3 className="font-display text-h4 font-semibold text-charcoal">
+                See all services
+              </h3>
+              <p className="mt-2 text-sm text-muted">
+                Browse the full catalogue with detailed descriptions for each
+                service.
+              </p>
+              <div className="mt-6">
+                <Button href="/services" variant="primary" size="md">
+                  All Services
+                </Button>
+              </div>
             </div>
-          </div>
-        </div>
+          </StaggerItem>
+        </Stagger>
       </Container>
     </Section>
   );

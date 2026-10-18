@@ -35,6 +35,8 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  // Add this to fix the local WebSocket HMR error:
+  allowedDevOrigins: ["mosnerifoods.lvh.me", "lvh.me"],
 
 };
 

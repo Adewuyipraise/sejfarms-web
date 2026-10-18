@@ -1,19 +1,14 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { Resend } from "resend";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-const fromAddress =
-  process.env.RESEND_FROM ?? "Sejfarms Website <onboarding@resend.dev>";
+import { resend, fromAddress, inbox } from "@/lib/mail";
+import { getResource } from "@/content/resources";
 
 const schema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
   role: z.string().optional(),
-  resourceSlug: z.string(),
-  resourceTitle: z.string(),
-  fileUrl: z.string(),
+  resourceSlug: z.string().min(1),
   consent: z.literal(true),
   honeypot: z.string().max(0).optional(),
 });
@@ -40,16 +35,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true });
     }
 
-    const downloadUrl = `https://www.sejfarmsgroup.com${data.fileUrl}`;
+    // Resolve the file server-side from an allow-list — never trust a
+    // client-supplied URL or title.
+    const resource = getResource(data.resourceSlug);
+    if (!resource) {
+      return NextResponse.json({ error: "Unknown resource." }, { status: 400 });
+    }
+
+    const downloadUrl = new URL(resource.file, "https://www.sejfarmsgroup.com")
+      .href;
 
     const deliver = await resend.emails.send({
       from: fromAddress,
       to: [data.email],
-      subject: `Your Sejfarms resource: ${data.resourceTitle}`,
+      subject: `Your Sejfarms resource: ${resource.title}`,
       text: [
         `Hi ${data.name},`,
         "",
-        `Thank you for requesting "${data.resourceTitle}".`,
+        `Thank you for requesting "${resource.title}".`,
         "",
         `Download it here: ${downloadUrl}`,
         "",
@@ -68,11 +71,11 @@ export async function POST(req: Request) {
     // Notify Sejfarms (fire-and-forget)
     await resend.emails.send({
       from: fromAddress,
-      to: ["sejfarmsconsultltd@gmail.com"],
+      to: [inbox],
       replyTo: data.email,
-      subject: `Resource download — ${data.resourceTitle}`,
+      subject: `Resource download — ${resource.title}`,
       text: [
-        `Resource: ${data.resourceTitle}`,
+        `Resource: ${resource.title}`,
         `Name: ${data.name}`,
         `Email: ${data.email}`,
         `Role: ${data.role ?? "—"}`,

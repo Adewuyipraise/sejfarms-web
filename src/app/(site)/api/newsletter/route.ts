@@ -1,11 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { Resend } from "resend";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-const fromAddress =
-  process.env.RESEND_FROM ?? "Sejfarms Website <onboarding@resend.dev>";
+import { resend, fromAddress, inbox } from "@/lib/mail";
 
 const schema = z.object({
   email: z.string().email(),
@@ -36,7 +32,7 @@ export async function POST(req: Request) {
 
     const result = await resend.emails.send({
       from: fromAddress,
-      to: ["sejfarmsconsultltd@gmail.com"],
+      to: [inbox],
       subject: `Newsletter signup — ${data.email}`,
       text: `New newsletter signup: ${data.email}`,
     });

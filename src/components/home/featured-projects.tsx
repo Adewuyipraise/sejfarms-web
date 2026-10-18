@@ -8,6 +8,7 @@ import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { sanityFetch } from "@/sanity/fetch";
 import { FEATURED_PROJECTS_QUERY } from "@/sanity/queries";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 
 type SanityProject = {
   _id: string;
@@ -42,7 +43,7 @@ export async function FeaturedProjects() {
               </Heading>
               <p className="mt-4 text-body-lg text-muted text-pretty">
                 Detailed project case studies are being finalised. In the
-                meantime, contact us to learn how we've helped farmers and
+                meantime, contact us to learn how we’ve helped farmers and
                 partners across Nigeria.
               </p>
             </div>
@@ -58,7 +59,7 @@ export async function FeaturedProjects() {
   return (
     <Section>
       <Container>
-        <div className="flex flex-wrap items-end justify-between gap-6">
+        <Reveal className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-2xl">
             <Eyebrow>Our Projects</Eyebrow>
             <Heading level={2} className="mt-4">
@@ -68,14 +69,14 @@ export async function FeaturedProjects() {
           <Button href="/projects" variant="ghost">
             View All Projects →
           </Button>
-        </div>
+        </Reveal>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Stagger className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {featured.map((project) => (
+            <StaggerItem key={project._id} className="flex">
             <Link
-              key={project._id}
               href={`/projects/${project.slug}`}
-              className="group flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
+              className="group flex w-full flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-brand/10">
                 <Image
@@ -102,8 +103,9 @@ export async function FeaturedProjects() {
                 </span>
               </div>
             </Link>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </Container>
     </Section>
   );

@@ -4,6 +4,7 @@ import { Section } from "@/components/ui/section";
 import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
 import { ArticleCard } from "@/components/shared/article-card";
+import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { sanityFetch } from "@/sanity/fetch";
 import { POSTS_QUERY } from "@/sanity/queries";
 import type { Post } from "@/types";
@@ -44,11 +45,13 @@ export default async function KnowledgeHubPage() {
               </p>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Stagger className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => (
-                <ArticleCard key={post._id} post={post} />
+                <StaggerItem key={post._id} className="flex">
+                  <ArticleCard post={post} />
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           )}
         </Container>
       </Section>

@@ -11,20 +11,12 @@ export const metadata: Metadata = {
   description: "Talk to SEJFARMS about aquaculture, agriculture, consultancy, training, products or partnership.",
 };
 
-export default function ContactPage({
+export default async function ContactPage({
   searchParams,
 }: {
   searchParams: Promise<{ interest?: string }>;
 }) {
-  // We can't await searchParams in a sync component; make it async in Next 16.
-  // Handled below via a small wrapper.
-  return <ContactInner />;
-}
-
-async function ContactInner() {
-  // In Next 15+, searchParams is a Promise in server components. For static
-  // rendering we read it via the page props; to keep this file simple we don't
-  // thread it here — the client form defaults to "Aquaculture".
+  const { interest } = await searchParams;
   return (
     <>
       <PageHero
@@ -38,7 +30,7 @@ async function ContactInner() {
       <Section>
         <Container>
           <div className="grid gap-16 lg:grid-cols-[1fr_400px]">
-            <ContactForm />
+            <ContactForm defaultInterest={interest} />
 
             <aside className="space-y-8">
               <div>

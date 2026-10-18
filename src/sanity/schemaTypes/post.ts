@@ -1,5 +1,4 @@
 import { defineField, defineType } from "sanity";
-import { youtube } from './youtube'
 
 export const post = defineType({
   name: "post",
@@ -42,7 +41,7 @@ export const post = defineType({
         list: [
           "Aquaculture",
           "Farm Management",
-          "Value Addition",
+          "Mosnerifoods",
           "Training",
           "Company News",
           "Partnership",
@@ -89,7 +88,25 @@ export const post = defineType({
       name: "body",
       title: "Body",
       type: "array",
-      of: [{ type: "block" }, { type: 'youtube' }],
+      of: [
+        { type: "block" }, 
+        { type: 'youtube' }, 
+        { 
+          type: "image", 
+          options: { hotspot: true },
+          fields: [
+            {
+              name: "caption",
+              title: "Caption",
+              type: "string",
+            },
+            {
+              name: "alt",
+              title: "Alt Text (for accessibility)",
+              type: "string",
+            }
+          ]
+        }], 
     }),
     defineField({
       name: "featured",

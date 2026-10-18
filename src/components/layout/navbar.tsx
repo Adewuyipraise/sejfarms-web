@@ -23,11 +23,20 @@ export function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
 
+  // Close the "More" dropdown with Escape for keyboard users.
   useEffect(() => {
-    setMoreOpen(false);
-  }, []);
+    if (!moreOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMoreOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [moreOpen]);
 
   return (
     <header
@@ -38,7 +47,7 @@ export function Navbar() {
           : "bg-cream",
       )}
     >
-      <Container className="flex h-16 items-center justify-between md:h-24">
+      <Container className="flex h-16 items-center justify-between md:h-20">
         <Link href="/" className="flex items-center">
           <Image
             src="/logos/sejfarms-logo.png"
@@ -60,10 +69,19 @@ export function Navbar() {
                   className="relative"
                   onMouseEnter={() => setMoreOpen(true)}
                   onMouseLeave={() => setMoreOpen(false)}
+                  onFocus={() => setMoreOpen(true)}
+                  onBlur={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+                      setMoreOpen(false);
+                    }
+                  }}
                 >
                   <button
+                    type="button"
+                    onClick={() => setMoreOpen((v) => !v)}
                     className="inline-flex items-center gap-1 text-sm font-medium text-charcoal transition-colors hover:text-brand"
                     aria-expanded={moreOpen}
+                    aria-haspopup="true"
                   >
                     {item.label}
                     <ChevronDown

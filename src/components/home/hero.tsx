@@ -13,25 +13,25 @@ export function Hero() {
         alt=""
         fill
         priority
-        className="object-cover"
+        className="animate-kenburns object-cover"
         sizes="100vw"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/70 via-brand-dark/90 to-brand-dark/100" />
 
-      <Container className="relative flex min-h-[85vh] flex-col justify-center py-24 md:py-32">
-        <Eyebrow className="text-base font-semibold tracking-[0.18em] text-accent md:text-lg">
+      <Container className="relative flex min-h-[85vh] flex-col justify-center py-24 md:py-16">
+        <Eyebrow className="animate-rise text-base font-semibold tracking-[0.18em] text-accent md:text-lg">
           {site.name}
         </Eyebrow>
 
-        <h1 className="mt-6 max-w-5xl font-display text-3xl font-semibold leading-[1.15] tracking-tight text-white text-balance sm:text-4xl md:text-5xl lg:text-6xl">
+        <h1 className="animate-rise mt-6 max-w-5xl font-display text-3xl font-semibold leading-[1.15] tracking-tight text-white text-balance [animation-delay:80ms] sm:text-4xl md:text-5xl lg:text-6xl">
           {site.tagline}
         </h1>
 
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-cream/90 text-pretty md:text-xl">
+        <p className="animate-rise mt-6 max-w-2xl text-lg leading-relaxed text-cream/90 text-pretty [animation-delay:160ms] md:text-xl">
           {site.subline}
         </p>
 
-        <div className="mt-10 flex flex-wrap gap-4">
+        <div className="animate-rise mt-10 flex flex-wrap gap-4 [animation-delay:240ms]">
           <Button href="/services" size="lg" variant="primary">
             Explore Our Services
           </Button>

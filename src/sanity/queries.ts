@@ -1,8 +1,17 @@
 import { groq } from "next-sanity";
 
+/**
+ * Shared GROQ fragments.
+ *
+ * `PUBLISHED_FILTER` excludes draft documents and anything with a future
+ * `publishedAt`, so unpublished/scheduled content never leaks onto the site
+ * (or into `generateStaticParams` / the sitemap).
+ */
+const PUBLISHED_FILTER = `!(_id in path("drafts.**")) && (!defined(publishedAt) || publishedAt <= now())`;
+
 // ---------- Posts ----------
 export const POSTS_QUERY = groq`
-  *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
+  *[_type == "post" && defined(slug.current) && ${PUBLISHED_FILTER}] | order(publishedAt desc) {
     _id,
     title,
     "slug": slug.current,
@@ -30,14 +39,20 @@ export const POST_QUERY = groq`
     publishedAt,
     readingTime,
     "coverImage": coverImage.asset->url,
-    body,
+    body[] {
+      ...,
+      _type == "image" => {
+        ...,
+        "url": asset->url
+      }
+    },
     featured,
     externalUrl
   }
 `;
 
 export const FEATURED_POSTS_QUERY = groq`
-  *[_type == "post" && featured == true && defined(slug.current)] | order(publishedAt desc) {
+  *[_type == "post" && featured == true && defined(slug.current) && ${PUBLISHED_FILTER}] | order(publishedAt desc) {
     _id,
     title,
     "slug": slug.current,
@@ -54,12 +69,12 @@ export const FEATURED_POSTS_QUERY = groq`
 `;
 
 export const POST_SLUGS_QUERY = groq`
-  *[_type == "post" && defined(slug.current)][].slug.current
+  *[_type == "post" && defined(slug.current) && ${PUBLISHED_FILTER}][].slug.current
 `;
 
 // ---------- Products ----------
 export const PRODUCTS_QUERY = groq`
-  *[_type == "product" && available == true] | order(_createdAt desc) {
+  *[_type == "product" && available == true && ${PUBLISHED_FILTER}] | order(_createdAt desc) {
     _id,
     name,
     "slug": slug.current,
@@ -74,7 +89,7 @@ export const PRODUCTS_QUERY = groq`
 `;
 
 export const PRODUCT_BY_SLUG_QUERY = groq`
-  *[_type == "product" && slug.current == $slug][0] {
+  *[_type == "product" && slug.current == $slug && ${PUBLISHED_FILTER}][0] {
     _id,
     name,
     "slug": slug.current,
@@ -89,12 +104,16 @@ export const PRODUCT_BY_SLUG_QUERY = groq`
 `;
 
 export const PRODUCT_SLUGS_QUERY = groq`
-  *[_type == "product" && available == true && defined(slug.current)][].slug.current
+  *[_type == "product" && available == true && defined(slug.current) && ${PUBLISHED_FILTER}][].slug.current
 `;
 
 // ---------- Events ----------
+//
+// `isPast` is derived from `endDate ?? startDate` so events automatically move
+// from "Upcoming" to "Past" without an editor toggling anything. Kept in sync
+// with the `past` fallback for legacy documents that set it manually.
 export const EVENTS_QUERY = groq`
-  *[_type == "event"] | order(startDate desc) {
+  *[_type == "event" && ${PUBLISHED_FILTER}] | order(startDate asc) {
     _id,
     title,
     "slug": slug.current,
@@ -107,12 +126,13 @@ export const EVENTS_QUERY = groq`
     requiresRegistration,
     capacity,
     "image": image.asset->url,
-    past
+    past,
+    "isPast": coalesce(past, false) || (coalesce(endDate, startDate) < now())
   }
 `;
 
 export const EVENT_BY_SLUG_QUERY = groq`
-  *[_type == "event" && slug.current == $slug][0] {
+  *[_type == "event" && slug.current == $slug && ${PUBLISHED_FILTER}][0] {
     _id,
     title,
     "slug": slug.current,
@@ -130,12 +150,12 @@ export const EVENT_BY_SLUG_QUERY = groq`
 `;
 
 export const EVENT_SLUGS_QUERY = groq`
-  *[_type == "event" && defined(slug.current)][].slug.current
+  *[_type == "event" && defined(slug.current) && ${PUBLISHED_FILTER}][].slug.current
 `;
 
 // ---------- Gallery ----------
 export const GALLERY_ALBUMS_QUERY = groq`
-  *[_type == "galleryAlbum"] | order(year desc, title asc) {
+  *[_type == "galleryAlbum" && ${PUBLISHED_FILTER}] | order(year desc, title asc) {
     _id,
     title,
     "slug": slug.current,
@@ -144,12 +164,13 @@ export const GALLERY_ALBUMS_QUERY = groq`
     year,
     "coverImage": coverImage.asset->url,
     "imageCount": count(coalesce(images, [])),
-    "videoCount": count(coalesce(videos, []))
+    "videoCount": count(coalesce(videos, [])),
+    "mediaCount": count(coalesce(images, [])) + count(coalesce(videos, []))
   }
 `;
 
 export const GALLERY_ALBUM_BY_SLUG_QUERY = groq`
-  *[_type == "galleryAlbum" && slug.current == $slug][0] {
+  *[_type == "galleryAlbum" && slug.current == $slug && ${PUBLISHED_FILTER}][0] {
     _id,
     title,
     "slug": slug.current,
@@ -171,12 +192,12 @@ export const GALLERY_ALBUM_BY_SLUG_QUERY = groq`
 `;
 
 export const GALLERY_ALBUM_SLUGS_QUERY = groq`
-  *[_type == "galleryAlbum" && defined(slug.current)][].slug.current
+  *[_type == "galleryAlbum" && defined(slug.current) && ${PUBLISHED_FILTER}][].slug.current
 `;
 
 // ---------- Testimonials ----------
 export const TESTIMONIALS_QUERY = groq`
-  *[_type == "testimonial"] | order(featured desc, _createdAt desc) {
+  *[_type == "testimonial" && ${PUBLISHED_FILTER}] | order(featured desc, _createdAt desc) {
     _id,
     author,
     "slug": slug.current,
@@ -189,7 +210,7 @@ export const TESTIMONIALS_QUERY = groq`
 `;
 
 export const FEATURED_TESTIMONIALS_QUERY = groq`
-  *[_type == "testimonial" && featured == true] | order(_createdAt desc) {
+  *[_type == "testimonial" && featured == true && ${PUBLISHED_FILTER}] | order(_createdAt desc) {
     _id,
     author,
     "slug": slug.current,
@@ -203,7 +224,7 @@ export const FEATURED_TESTIMONIALS_QUERY = groq`
 
 // ---------- Institution Reviews ----------
 export const INSTITUTION_REVIEWS_QUERY = groq`
-  *[_type == "institutionReview"] | order(featured desc, institution asc) {
+  *[_type == "institutionReview" && ${PUBLISHED_FILTER}] | order(featured desc, institution asc) {
     _id,
     institution,
     "slug": slug.current,
@@ -217,7 +238,7 @@ export const INSTITUTION_REVIEWS_QUERY = groq`
 
 // ---------- Job Postings ----------
 export const JOBS_QUERY = groq`
-  *[_type == "jobPosting"] | order(postedAt desc) {
+  *[_type == "jobPosting" && ${PUBLISHED_FILTER}] | order(postedAt desc) {
     _id,
     title,
     "slug": slug.current,
@@ -236,7 +257,7 @@ export const JOBS_QUERY = groq`
 `;
 
 export const OPEN_JOBS_QUERY = groq`
-  *[_type == "jobPosting" && open == true] | order(postedAt desc) {
+  *[_type == "jobPosting" && open == true && (!defined(closesAt) || closesAt >= now()) && ${PUBLISHED_FILTER}] | order(postedAt desc) {
     _id,
     title,
     "slug": slug.current,
@@ -255,7 +276,7 @@ export const OPEN_JOBS_QUERY = groq`
 `;
 
 export const JOB_BY_SLUG_QUERY = groq`
-  *[_type == "jobPosting" && slug.current == $slug][0] {
+  *[_type == "jobPosting" && slug.current == $slug && ${PUBLISHED_FILTER}][0] {
     _id,
     title,
     "slug": slug.current,
@@ -274,12 +295,12 @@ export const JOB_BY_SLUG_QUERY = groq`
 `;
 
 export const JOB_SLUGS_QUERY = groq`
-  *[_type == "jobPosting" && defined(slug.current)][].slug.current
+  *[_type == "jobPosting" && defined(slug.current) && ${PUBLISHED_FILTER}][].slug.current
 `;
 
 // ---------- Services ----------
 export const SERVICES_QUERY = groq`
-  *[_type == "service"] | order(order asc) {
+  *[_type == "service" && ${PUBLISHED_FILTER}] | order(order asc) {
     _id,
     title,
     "slug": slug.current,
@@ -290,7 +311,7 @@ export const SERVICES_QUERY = groq`
 `;
 
 export const SERVICE_BY_SLUG_QUERY = groq`
-  *[_type == "service" && slug.current == $slug][0] {
+  *[_type == "service" && slug.current == $slug && ${PUBLISHED_FILTER}][0] {
     _id,
     title,
     "slug": slug.current,
@@ -316,12 +337,12 @@ export const SERVICE_BY_SLUG_QUERY = groq`
 `;
 
 export const SERVICE_SLUGS_QUERY = groq`
-  *[_type == "service" && defined(slug.current)][].slug.current
+  *[_type == "service" && defined(slug.current) && ${PUBLISHED_FILTER}][].slug.current
 `;
 
 // ---------- Subsidiaries ----------
 export const SUBSIDIARIES_QUERY = groq`
-  *[_type == "subsidiary"] | order(order asc) {
+  *[_type == "subsidiary" && ${PUBLISHED_FILTER}] | order(order asc) {
     _id,
     name,
     shortName,
@@ -335,7 +356,7 @@ export const SUBSIDIARIES_QUERY = groq`
 `;
 
 export const SUBSIDIARY_BY_SLUG_QUERY = groq`
-  *[_type == "subsidiary" && slug.current == $slug][0] {
+  *[_type == "subsidiary" && slug.current == $slug && ${PUBLISHED_FILTER}][0] {
     _id,
     name,
     shortName,
@@ -355,13 +376,13 @@ export const SUBSIDIARY_BY_SLUG_QUERY = groq`
 `;
 
 export const SUBSIDIARY_SLUGS_QUERY = groq`
-  *[_type == "subsidiary" && defined(slug.current)][].slug.current
+  *[_type == "subsidiary" && defined(slug.current) && ${PUBLISHED_FILTER}][].slug.current
 `;
 
 
 // ---------- Projects ----------
 export const PROJECTS_QUERY = groq`
-  *[_type == "project"] | order(order asc, year desc) {
+  *[_type == "project" && ${PUBLISHED_FILTER}] | order(order asc, year desc) {
     _id,
     title,
     "slug": slug.current,
@@ -375,7 +396,7 @@ export const PROJECTS_QUERY = groq`
 `;
 
 export const FEATURED_PROJECTS_QUERY = groq`
-  *[_type == "project" && featured == true] | order(order asc, year desc) {
+  *[_type == "project" && featured == true && ${PUBLISHED_FILTER}] | order(order asc, year desc) {
     _id,
     title,
     "slug": slug.current,
@@ -389,7 +410,7 @@ export const FEATURED_PROJECTS_QUERY = groq`
 `;
 
 export const PROJECT_BY_SLUG_QUERY = groq`
-  *[_type == "project" && slug.current == $slug][0] {
+  *[_type == "project" && slug.current == $slug && ${PUBLISHED_FILTER}][0] {
     _id,
     title,
     "slug": slug.current,
@@ -406,13 +427,13 @@ export const PROJECT_BY_SLUG_QUERY = groq`
 `;
 
 export const PROJECT_SLUGS_QUERY = groq`
-  *[_type == "project" && defined(slug.current)][].slug.current
+  *[_type == "project" && defined(slug.current) && ${PUBLISHED_FILTER}][].slug.current
 `;
 
 
 // ---------- Leadership ----------
 export const LEADERS_QUERY = groq`
-  *[_type == "leader"] | order(order asc) {
+  *[_type == "leader" && ${PUBLISHED_FILTER}] | order(order asc) {
     _id,
     name,
     role,
@@ -424,7 +445,7 @@ export const LEADERS_QUERY = groq`
 
 // ---------- FAQs ----------
 export const FAQS_QUERY = groq`
-  *[_type == "faq"] | order(category asc, order asc) {
+  *[_type == "faq" && ${PUBLISHED_FILTER}] | order(category asc, order asc) {
     _id,
     question,
     answer,
@@ -432,3 +453,29 @@ export const FAQS_QUERY = groq`
     order
   }
 `;
+
+
+// ---------- Mosnerifoods Page ----------
+export const MOSNERI_POSTS_QUERY = groq`
+  *[_type == "post" && category == "Mosnerifoods" && defined(slug.current)] | order(publishedAt desc)[0...3] {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    "coverImage": coverImage.asset->url
+  }
+`;
+
+
+// ---------- Training Partners Page ----------
+export const TRAINING_PARTNERS_QUERY = groq`
+  *[_type == "trainingPartner"] | order(order asc) {
+    _id,
+    name,
+    program,
+    year,
+    "logo": logo.asset->url
+  }
+`;
+

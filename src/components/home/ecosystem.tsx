@@ -7,6 +7,7 @@ import { Eyebrow } from "@/components/ui/eyebrow";
 import { Heading } from "@/components/ui/heading";
 import { sanityFetch } from "@/sanity/fetch";
 import { SUBSIDIARIES_QUERY } from "@/sanity/queries";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { EcosystemDiagram } from "./ecosystem-diagram";
 
 type SanitySubsidiary = {
@@ -30,7 +31,7 @@ export async function Ecosystem() {
       <Container>
         {/* Header — text on left, diagram on right */}
         <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
-          <div>
+          <Reveal>
             <Eyebrow>Our Group</Eyebrow>
             <Heading level={2} className="mt-4">
               One Group. Multiple Businesses.
@@ -41,21 +42,21 @@ export async function Ecosystem() {
               enterprise — each contributing to a stronger aquaculture value
               chain.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="overflow-x-auto">
+          <Reveal delay={0.08} className="overflow-x-auto">
             <EcosystemDiagram />
-          </div>
+          </Reveal>
         </div>
 
         {/* Subsidiary cards */}
         {subsidiaries.length > 0 && (
-          <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <Stagger className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {subsidiaries.map((sub) => (
+              <StaggerItem key={sub._id} className="flex">
               <Link
-                key={sub._id}
                 href={`/subsidiaries/${sub.slug}`}
-                className="group flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
+                className="group flex w-full flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
               >
                 {sub.image && (
                   <div className="relative aspect-[16/10] overflow-hidden bg-brand/10">
@@ -84,8 +85,9 @@ export async function Ecosystem() {
                   </span>
                 </div>
               </Link>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         )}
       </Container>
     </Section>

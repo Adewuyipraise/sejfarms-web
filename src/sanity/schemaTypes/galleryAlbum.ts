@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineField, defineType, type Rule } from "sanity";
 
 export const galleryAlbum = defineType({
   name: "galleryAlbum",
@@ -85,7 +85,7 @@ export const galleryAlbum = defineType({
               name: "url",
               title: "Video URL",
               type: "url",
-              validation: (r: any) => r.required(),
+              validation: (r: Rule) => r.required(),
             },
             {
               name: "caption",

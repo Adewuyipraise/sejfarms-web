@@ -5,6 +5,7 @@ import { Images } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { PageHero } from "@/components/shared/page-hero";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { sanityFetch } from "@/sanity/fetch";
 import { GALLERY_ALBUMS_QUERY } from "@/sanity/queries";
 
@@ -64,14 +65,18 @@ export default async function GalleryPage() {
             <div className="space-y-16">
               {categories.map((cat) => (
                 <div key={cat}>
-                  <h2 className="font-display text-h2 font-bold text-charcoal">
-                    {cat}
-                  </h2>
-                  <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  <Reveal>
+                    <h2 className="font-display text-h2 font-bold text-charcoal">
+                      {cat}
+                    </h2>
+                  </Reveal>
+                  <Stagger className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {byCategory[cat].map((album) => (
-                      <AlbumCard key={album._id} album={album} />
+                      <StaggerItem key={album._id} className="flex">
+                        <AlbumCard album={album} />
+                      </StaggerItem>
                     ))}
-                  </div>
+                  </Stagger>
                 </div>
               ))}
             </div>
@@ -86,7 +91,7 @@ function AlbumCard({ album }: { album: SanityAlbum }) {
   return (
     <Link
       href={`/gallery/${album.slug}`}
-      className="group flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
+      className="group flex w-full flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-brand/10">
         <Image

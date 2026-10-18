@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
+import { Reveal } from "@/components/motion/reveal";
 import { sanityFetch } from "@/sanity/fetch";
 import { FAQS_QUERY } from "@/sanity/queries";
 
@@ -50,7 +51,7 @@ export default async function FAQsPage() {
                 const items = faqs.filter((f) => f.category === cat);
                 if (items.length === 0) return null;
                 return (
-                  <div key={cat} className="mb-12 last:mb-0">
+                  <Reveal key={cat} className="mb-12 last:mb-0">
                     <h2 className="font-display text-h3 font-semibold">
                       {cat}
                     </h2>
@@ -64,7 +65,7 @@ export default async function FAQsPage() {
                         </div>
                       ))}
                     </dl>
-                  </div>
+                  </Reveal>
                 );
               })}
             </div>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Calendar, MapPin, Users } from "lucide-react";
@@ -7,6 +6,7 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
+import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 import { sanityFetch } from "@/sanity/fetch";
 import { EVENT_BY_SLUG_QUERY, EVENT_SLUGS_QUERY } from "@/sanity/queries";
@@ -100,7 +100,7 @@ async function EventContent({ params }: { params: Promise<Params> }) {
 
       <Section>
         <Container>
-          <div className="mx-auto max-w-3xl">
+          <Reveal className="mx-auto max-w-3xl">
             {/* Meta row */}
             <div className="flex flex-wrap gap-6 border-b border-border pb-8 text-sm">
               <div className="inline-flex items-center gap-2 text-muted">
@@ -138,7 +138,7 @@ async function EventContent({ params }: { params: Promise<Params> }) {
                   Register for this event
                 </h3>
                 <p className="mt-2 text-sm text-muted">
-                  Register your interest and we'll be in touch with details.
+                  Register your interest and we’ll be in touch with details.
                 </p>
                 <div className="mt-6">
                   <Button
@@ -150,7 +150,7 @@ async function EventContent({ params }: { params: Promise<Params> }) {
                 </div>
               </div>
             )}
-          </div>
+          </Reveal>
         </Container>
       </Section>
 

@@ -9,6 +9,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
 import { sanityFetch } from "@/sanity/fetch";
 import { EVENTS_QUERY } from "@/sanity/queries";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
   title: "Events",
@@ -30,6 +31,8 @@ type SanityEvent = {
   capacity?: number;
   image?: string;
   past: boolean;
+  /** Derived in GROQ from `endDate ?? startDate` — events auto-expire. */
+  isPast: boolean;
 };
 
 export default async function EventsPage() {
@@ -38,8 +41,12 @@ export default async function EventsPage() {
     tags: ["event"],
   });
 
-  const upcoming = events.filter((e) => !e.past);
-  const past = events.filter((e) => e.past);
+  // Query is ordered by startDate ascending; upcoming are soonest-first,
+  // past are shown most-recent-first.
+  const upcoming = events.filter((e) => !e.isPast);
+  const past = events
+    .filter((e) => e.isPast)
+    .sort((a, b) => +new Date(b.startDate) - +new Date(a.startDate));
 
   return (
     <>
@@ -53,18 +60,22 @@ export default async function EventsPage() {
 
       <Section>
         <Container>
-          <Heading level={2}>Upcoming</Heading>
+          <Reveal>
+            <Heading level={2}>Upcoming</Heading>
+          </Reveal>
           {upcoming.length === 0 ? (
             <p className="mt-6 max-w-2xl text-muted">
               No upcoming events at the moment. New programmes will be listed
               here as they are announced.
             </p>
           ) : (
-            <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Stagger className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {upcoming.map((event) => (
-                <EventCard key={event._id} event={event} />
+                <StaggerItem key={event._id} className="flex">
+                  <EventCard event={event} />
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           )}
         </Container>
       </Section>
@@ -72,12 +83,16 @@ export default async function EventsPage() {
       {past.length > 0 && (
         <Section className="bg-white">
           <Container>
-            <Heading level={2}>Past Events</Heading>
-            <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Reveal>
+              <Heading level={2}>Past Events</Heading>
+            </Reveal>
+            <Stagger className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {past.map((event) => (
-                <EventCard key={event._id} event={event} />
+                <StaggerItem key={event._id} className="flex">
+                  <EventCard event={event} />
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           </Container>
         </Section>
       )}
@@ -101,7 +116,7 @@ function EventCard({ event }: { event: SanityEvent }) {
   return (
     <Link
       href={`/events/${event.slug}`}
-      className="group flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
+      className="group flex w-full flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
     >
       {event.image && (
         <div className="relative aspect-[16/9] overflow-hidden bg-brand/10">

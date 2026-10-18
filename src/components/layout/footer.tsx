@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
@@ -8,8 +6,6 @@ import { site } from "@/content/site";
 import { CopyrightYear } from "./copyright-year";
 
 export function Footer() {
-
-
   return (
     <footer className="mt-24 border-t border-border bg-charcoal text-cream">
       <Container className="py-16 md:py-20">

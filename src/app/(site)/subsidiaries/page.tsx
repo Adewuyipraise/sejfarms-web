@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { PageHero } from "@/components/shared/page-hero";
 import { PageCTA } from "@/components/shared/page-cta";
+import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { sanityFetch } from "@/sanity/fetch";
 import { SUBSIDIARIES_QUERY } from "@/sanity/queries";
 
@@ -50,12 +51,12 @@ export default async function SubsidiariesPage() {
               Subsidiary information is being finalised.
             </p>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Stagger className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {subsidiaries.map((sub) => (
+                <StaggerItem key={sub._id} className="flex">
                 <Link
-                  key={sub._id}
                   href={`/subsidiaries/${sub.slug}`}
-                  className="group flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
+                  className="group flex w-full flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
                 >
                   {sub.image && (
                     <div className="relative aspect-[16/10] overflow-hidden bg-brand/10">
@@ -84,8 +85,9 @@ export default async function SubsidiariesPage() {
                     </span>
                   </div>
                 </Link>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           )}
         </Container>
       </Section>

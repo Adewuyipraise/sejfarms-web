@@ -17,7 +17,7 @@ export function ArticleCard({ post }: { post: ArticleCardPost }) {
   return (
     <Link
       href={`/knowledge-hub/${post.slug}`}
-      className="group flex flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
+      className="group flex w-full flex-col overflow-hidden rounded-card border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lift"
     >
       {post.coverImage && (
         <div className="relative aspect-[16/9] overflow-hidden bg-brand/10">

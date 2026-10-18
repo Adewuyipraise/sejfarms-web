@@ -1,6 +1,7 @@
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
-import { whatsappLink, whatsappMessages } from "@/lib/whatsapp";
+import { Reveal } from "@/components/motion/reveal";
+import { whatsappLink } from "@/lib/whatsapp";
 
 export function PageCTA({
   title,
@@ -16,7 +17,7 @@ export function PageCTA({
   return (
     <section className="border-t border-border bg-white py-16 md:py-24">
       <Container>
-        <div className="mx-auto max-w-3xl text-center">
+        <Reveal className="mx-auto max-w-3xl text-center">
           <h2 className="font-display text-h2 font-bold text-balance">
             {title}
           </h2>
@@ -40,7 +41,7 @@ export function PageCTA({
               </Button>
             )}
           </div>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );

@@ -4,6 +4,7 @@ import { Eyebrow } from "@/components/ui/eyebrow";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { ArticleCard } from "@/components/shared/article-card";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { sanityFetch } from "@/sanity/fetch";
 import { FEATURED_POSTS_QUERY } from "@/sanity/queries";
 
@@ -34,7 +35,7 @@ export async function LatestInsights() {
   return (
     <Section className="bg-cream">
       <Container>
-        <div className="flex flex-wrap items-end justify-between gap-6">
+        <Reveal className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-2xl">
             <Eyebrow>Knowledge Hub</Eyebrow>
             <Heading level={2} className="mt-4">
@@ -44,23 +45,24 @@ export async function LatestInsights() {
           <Button href="/knowledge-hub" variant="ghost">
             View All →
           </Button>
-        </div>
+        </Reveal>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Stagger className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {latest.map((post) => (
-            <ArticleCard
-              key={post._id}
-              post={{
-                slug: post.slug,
-                title: post.title,
-                excerpt: post.excerpt,
-                category: post.category,
-                readingTime: post.readingTime ?? 0,
-                coverImage: post.coverImage,
-              }}
-            />
+            <StaggerItem key={post._id}>
+              <ArticleCard
+                post={{
+                  slug: post.slug,
+                  title: post.title,
+                  excerpt: post.excerpt,
+                  category: post.category,
+                  readingTime: post.readingTime ?? 0,
+                  coverImage: post.coverImage,
+                }}
+              />
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </Container>
     </Section>
   );

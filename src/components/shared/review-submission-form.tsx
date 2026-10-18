@@ -54,8 +54,8 @@ export function ReviewSubmissionForm() {
           Thank you.
         </h3>
         <p className="mt-3 text-charcoal/80">
-          Your review has been submitted for moderation. We'll publish it once
-          it's been reviewed by our team.
+          Your review has been submitted for moderation. We’ll publish it once
+          it’s been reviewed by our team.
         </p>
       </div>
     );

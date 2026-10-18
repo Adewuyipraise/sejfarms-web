@@ -4,6 +4,7 @@ import { Section } from "@/components/ui/section";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/motion/reveal";
 
 const pillars = [
   "Production",
@@ -21,7 +22,7 @@ export function WhoWeAre() {
       <Container>
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Image left */}
-          <div className="relative aspect-[4/3] overflow-hidden rounded-card bg-brand/10">
+          <Reveal className="relative aspect-[4/3] overflow-hidden rounded-card bg-brand/10">
             <Image
               src="/images/hero/home.jpg"
               alt="Sejfarms operations"
@@ -29,10 +30,10 @@ export function WhoWeAre() {
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
-          </div>
+          </Reveal>
 
           {/* Text right */}
-          <div className="flex flex-col justify-center">
+          <Reveal delay={0.08} className="flex flex-col justify-center">
             <Eyebrow>Who We Are</Eyebrow>
             <Heading level={2} className="mt-4">
               More Than a Farm. An Agricultural Ecosystem.
@@ -60,7 +61,7 @@ export function WhoWeAre() {
                 Learn About Sejfarms →
               </Button>
             </div>
-          </div>
+          </Reveal>
         </div>
       </Container>
     </Section>

@@ -2,55 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { X, ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { parseVideo } from "@/lib/video";
 
 type Media = {
   type: "image" | "video";
   url: string;
   caption?: string;
 };
-
-/** Detect video providers and extract thumbnail + embed URLs. */
-function parseVideo(url: string) {
-  // YouTube
-  const ytMatch =
-    url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  if (ytMatch) {
-    const id = ytMatch[1];
-    return {
-      provider: "youtube" as const,
-      thumbnail: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
-      embedUrl: `https://www.youtube.com/embed/${id}?autoplay=1`,
-    };
-  }
-
-  // Vimeo
-  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
-  if (vimeoMatch) {
-    const id = vimeoMatch[1];
-    return {
-      provider: "vimeo" as const,
-      // Vimeo thumbnails require an API call; use a generic fallback
-      thumbnail: null,
-      embedUrl: `https://player.vimeo.com/video/${id}?autoplay=1`,
-    };
-  }
-
-  // Direct .mp4/.webm
-  if (/\.(mp4|webm|mov)(\?.*)?$/i.test(url)) {
-    return {
-      provider: "file" as const,
-      thumbnail: null,
-      embedUrl: url,
-    };
-  }
-
-  // Unknown — treat as generic link
-  return {
-    provider: "unknown" as const,
-    thumbnail: null,
-    embedUrl: url,
-  };
-}
 
 export function AlbumMediaGrid({
   media: mediaInput,
@@ -71,9 +29,13 @@ export function AlbumMediaGrid({
   useEffect(() => {
     if (openIndex === null) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "ArrowRight") next();
+      if (e.key === "Escape") setOpenIndex(null);
+      if (e.key === "ArrowLeft")
+        setOpenIndex((i) =>
+          i === null ? null : (i - 1 + media.length) % media.length,
+        );
+      if (e.key === "ArrowRight")
+        setOpenIndex((i) => (i === null ? null : (i + 1) % media.length));
     };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -81,7 +43,7 @@ export function AlbumMediaGrid({
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [openIndex]);
+  }, [openIndex, media.length]);
 
   if (media.length === 0) {
     return (
@@ -158,6 +120,7 @@ export function AlbumMediaGrid({
           onClick={close}
         >
           <button
+            type="button"
             onClick={close}
             aria-label="Close"
             className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20"
@@ -168,6 +131,7 @@ export function AlbumMediaGrid({
           {media.length > 1 && (
             <>
               <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   prev();
@@ -178,6 +142,7 @@ export function AlbumMediaGrid({
                 <ChevronLeft className="h-6 w-6" />
               </button>
               <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   next();
@@ -231,6 +196,7 @@ function VideoLightbox({ url }: { url: string }) {
       <div className="aspect-video w-[90vw] max-w-5xl">
         <iframe
           src={video.embedUrl}
+          title="Video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           className="h-full w-full rounded-lg"
@@ -246,6 +212,8 @@ function VideoLightbox({ url }: { url: string }) {
         src={url}
         controls
         autoPlay
+        muted
+        playsInline
         className="max-h-[90vh] max-w-[90vw] rounded-lg"
       />
     );

@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { Heading } from "@/components/ui/heading";
 import { PageHero } from "@/components/shared/page-hero";
+import { Stagger, StaggerItem } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
   title: "About",
@@ -35,12 +36,12 @@ export default function AboutPage() {
 
       <Section>
         <Container>
-          <div className="grid gap-6 md:grid-cols-2">
+          <Stagger className="grid gap-6 md:grid-cols-2">
             {pages.map((p) => (
+              <StaggerItem key={p.href} className="flex">
               <Link
-                key={p.href}
                 href={p.href}
-                className="group rounded-card border border-border bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-lift"
+                className="group flex w-full flex-col rounded-card border border-border bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-lift"
               >
                 <Heading level={3}>{p.title}</Heading>
                 <p className="mt-3 text-muted">{p.description}</p>
@@ -49,8 +50,9 @@ export default function AboutPage() {
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </span>
               </Link>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </Container>
       </Section>
     </>

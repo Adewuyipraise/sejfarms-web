@@ -18,10 +18,20 @@
   --color-muted: #6B6B6B;
   --color-border: #E5E0D8;
 
+  /* Mosnerifoods Brand Colors */
+  --color-mosneri-orange: #F26522; /* Primary Brand */
+  --color-mosneri-black: #1A1A1A;
+  --color-mosneri-red: #D32F2F;
+  --color-mosneri-yellow: #FBC02D;
+
+
+
   /* === FONTS === */
-  /* These wire up to the next/font variables in layout.tsx */
-  --font-display: var(--font-display);
-  --font-sans: var(--font-body);
+  /* Wired to the next/font variables in layout.tsx. Keep these names
+     distinct from the next/font variable names to avoid a circular
+     `var(--font-display): var(--font-display)` reference. */
+  --font-display: var(--font-manrope);
+  --font-sans: var(--font-inter);
 
   /* === BORDER RADIUS === */
   --radius-card: 12px;
@@ -100,4 +110,50 @@
 @utility text-justify {
   text-align: justify;
   hyphens: auto;
+}
+
+/* === ENTRANCE ANIMATIONS ===
+   Pure CSS (not JS-gated) so above-the-fold content is never blank while the
+   bundle loads. Fine-grained delays are applied with Tailwind arbitrary
+   properties, e.g. `[animation-delay:120ms]`. The global
+   `prefers-reduced-motion` rule above neutralises these. */
+@keyframes sej-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sej-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sej-kenburns {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.animate-rise {
+  animation: sej-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-fade-in {
+  animation: sej-fade 0.9s ease-out both;
+}
+
+.animate-kenburns {
+  animation: sej-kenburns 9s ease-out both;
 }
