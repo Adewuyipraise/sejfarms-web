@@ -19,7 +19,7 @@ export default async function MosneriProductsPage() {
 
   return (
     <>
-      <section className="bg-mosneri-black py-16 text-white md:py-24 border-b-4 border-mosneri-orange">
+      <section className="bg-mosneri-black py-16 text-white md:py-16 border-b-4 border-mosneri-orange">
         <Container>
           <Link href="/mosnerifoods" className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-6 transition-colors">
             <ArrowLeft className="h-4 w-4" /> Back to Mosnerifoods
@@ -31,7 +31,7 @@ export default async function MosneriProductsPage() {
         </Container>
       </section>
 
-      <Section className="bg-gray-50 py-12 md:py-20">
+      <Section className="bg-gray-50 py-12 md:py-10">
         <Container>
           {products.length === 0 ? (
             <p className="text-center text-muted">No products available yet.</p>

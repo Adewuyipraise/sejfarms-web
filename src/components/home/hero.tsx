@@ -18,12 +18,12 @@ export function Hero() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/70 via-brand-dark/90 to-brand-dark/100" />
 
-      <Container className="relative flex min-h-[85vh] flex-col justify-center py-24 md:py-16">
+      <Container className="relative flex min-h-[85vh] flex-col justify-center py-24 md:py-10">
         <Eyebrow className="animate-rise text-base font-semibold tracking-[0.18em] text-accent md:text-lg">
           {site.name}
         </Eyebrow>
 
-        <h1 className="animate-rise mt-6 max-w-5xl font-display text-3xl font-semibold leading-[1.15] tracking-tight text-white text-balance [animation-delay:80ms] sm:text-4xl md:text-5xl lg:text-6xl">
+        <h1 className="animate-rise mt-6 max-w-5xl font-display text-3xl font-semibold leading-[1.15] tracking-tight text-white text-balance [animation-delay:80ms] sm:text-2xl md:text-3xl lg:text-4xl">
           {site.tagline}
         </h1>
 

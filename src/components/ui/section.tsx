@@ -11,7 +11,7 @@ export function Section({ className, children, id, as: Tag = "section" }: Sectio
   return (
     <Tag
       id={id}
-      className={cn("py-16 md:py-24", className)}
+      className={cn("py-16 md:py-16", className)}
     >
       {children}
     </Tag>

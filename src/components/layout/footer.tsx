@@ -8,7 +8,7 @@ import { CopyrightYear } from "./copyright-year";
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-border bg-charcoal text-cream">
-      <Container className="py-16 md:py-20">
+      <Container className="py-16 md:py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-6">
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block">

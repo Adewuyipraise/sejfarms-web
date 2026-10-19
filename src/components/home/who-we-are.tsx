@@ -24,7 +24,7 @@ export function WhoWeAre() {
           {/* Image left */}
           <Reveal className="relative aspect-[4/3] overflow-hidden rounded-card bg-brand/10">
             <Image
-              src="/images/hero/home.jpg"
+              src="/images/hero/default1.jpg"
               alt="Sejfarms operations"
               fill
               className="object-cover"

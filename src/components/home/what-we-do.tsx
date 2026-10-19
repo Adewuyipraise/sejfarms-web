@@ -65,10 +65,10 @@ const GROUP_ORDER = [
 
 const GROUP_IMAGES: Record<string, string> = {
   "farm-operations": "/images/projects/fish-farm-development.jpg",
-  "consultancy-investment": "/images/hero/home.jpg",
-  "training-development": "/images/case-studies/farmer-capacity-programme.jpg",
+  "consultancy-investment": "/images/articles/sustainable-aquaculture-practices.jpg",
+  "training-development": "/images/og/knowledge-hub.jpg",
   "innovation-specialty": "/images/projects/sustainable-crop-production.jpg",
-  "market-value-chain": "/images/hero/processingbanner.jpg",
+  "market-value-chain": "/images/case-studies/farmer-capacity-programme.jpg",
 };
 
 export async function WhatWeDo() {

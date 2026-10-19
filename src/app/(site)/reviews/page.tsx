@@ -88,13 +88,13 @@ export default async function ReviewsPage() {
       {testimonials.length > 0 && (
         <Section className="bg-white">
           <Container>
-            <Reveal>
+            <div>
               <Heading level={2}>What Our People Say</Heading>
               <p className="mt-4 max-w-3xl text-muted">
                 Testimonials from students, interns and clients who have trained
                 or worked with us.
               </p>
-            </Reveal>
+            </div>
             <Stagger className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {testimonials.map((t) => (
                 <StaggerItem key={t._id} className="flex">

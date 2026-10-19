@@ -74,30 +74,3 @@ export async function POST(req: Request) {
   }
 }
 
-// 2. GET: Handles your manual browser tests
-export async function GET(req: Request) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const postId = searchParams.get("postId");
-
-    if (!postId) {
-      return NextResponse.json({ error: "Missing ?postId=" }, { status: 400 });
-    }
-
-    const result = await createGalleryAlbum(postId);
-    
-    if ("error" in result) {
-      return NextResponse.json(result, { status: result.status });
-    }
-
-    return NextResponse.json({
-      success: true, 
-      message: "Album created manually!",
-      albumId: result.albumId,
-      imageCount: result.imageCount
-    });
-
-  } catch (error: any) {
-    return NextResponse.json({ error: "Failed", details: error.message }, { status: 500 });
-  }
-}
