@@ -30,6 +30,7 @@ export const POSTS_QUERY = groq`
       }
     },
     featured,
+    likes,
     externalUrl
   }
 `;
@@ -54,6 +55,7 @@ export const POST_QUERY = groq`
       }
     },
     featured,
+    likes,
     externalUrl
   }
 `;
@@ -152,6 +154,7 @@ export const EVENT_BY_SLUG_QUERY = groq`
     requiresRegistration,
     capacity,
     "image": image.asset->url,
+    likes,
     past
   }
 `;
@@ -184,6 +187,7 @@ export const GALLERY_ALBUM_BY_SLUG_QUERY = groq`
     description,
     category,
     year,
+    likes,
     "coverImage": coverImage.asset->url,
     "images": coalesce(images, [])[] {
       _key,
@@ -293,6 +297,7 @@ export const JOB_BY_SLUG_QUERY = groq`
     postedAt,
     closesAt,
     summary,
+    likes,
     responsibilities,
     requirements,
     niceToHave,

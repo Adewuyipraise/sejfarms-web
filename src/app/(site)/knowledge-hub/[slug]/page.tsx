@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -11,6 +12,7 @@ import { sanityFetch } from "@/sanity/fetch";
 import { POST_QUERY, POST_SLUGS_QUERY } from "@/sanity/queries";
 import { parseVideo } from "@/lib/video";
 import { whatsappMessages } from "@/lib/whatsapp";
+import { LikeAndShare } from "@/components/shared/like-and-share";
 import Image from "next/image";
 
 export const instant = false;
@@ -18,9 +20,10 @@ export const instant = false;
 // Custom renderer for images and videos inside the Portable Text body
 const customComponents = {
   types: {
+    image: () => null,
 
     youtube: ({ value }: { value: { url: string } }) => (
-      <div className="my-8 aspect-video w-full overflow-hidden rounded-lg">
+      <figure className="my-8 aspect-video w-full overflow-hidden rounded-lg">
         <iframe
           src={parseVideo(value.url).embedUrl.replace("?autoplay=1", "")}
           title="Video"
@@ -28,7 +31,7 @@ const customComponents = {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
-      </div>
+      </figure>
     ),
   },
 };
@@ -47,6 +50,7 @@ type SanityPost = {
   readingTime?: number;
   coverImage?: string;
   body: PortableTextBlock[];
+  likes?: number;
 };
 
 export async function generateStaticParams() {
@@ -100,6 +104,15 @@ async function PostContent({ params }: { params: Promise<Params> }) {
   
   if (!post) notFound();
   
+
+    // --- ADD THIS BLOCK ---
+    const headersList = await headers();
+    const host = headersList.get("host") || "www.sejfarmsgroup.com";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const baseUrl = `${protocol}://${host}`;
+    const postUrl = `${baseUrl}/knowledge-hub/${post.slug}`;
+    // ----------------------
+
   
   // EXTRACT IMAGES FROM BODY
   const postImages = post.body
@@ -142,6 +155,7 @@ async function PostContent({ params }: { params: Promise<Params> }) {
               </time>
             </div>
 
+
             <div className="prose prose-lg max-w-none">
               <PortableText 
                 value={post.body} 
@@ -150,6 +164,13 @@ async function PostContent({ params }: { params: Promise<Params> }) {
             </div>
 
             <PostImageGallery images={postImages} />
+
+            <LikeAndShare
+              documentId={post._id}
+              title={post.title}
+              url={postUrl}
+              initialLikes={post.likes || 0}
+            />
 
           </div>
         </Container>

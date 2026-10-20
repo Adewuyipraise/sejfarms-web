@@ -40,6 +40,13 @@ export const galleryAlbum = defineType({
       validation: (r) => r.required().min(2000).max(2100),
     }),
     defineField({
+      name: "likes",
+      title: "Likes",
+      type: "number",
+      initialValue: 0,
+      readOnly: true,
+    }),
+    defineField({
       name: "coverImage",
       title: "Cover Image",
       type: "image",

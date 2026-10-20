@@ -89,6 +89,13 @@ export const jobPosting = defineType({
       type: "boolean",
       initialValue: true,
     }),
+    defineField({
+      name: "likes",
+      title: "Likes",
+      type: "number",
+      initialValue: 0,
+      readOnly: true,
+    }),
   ],
   preview: {
     select: {

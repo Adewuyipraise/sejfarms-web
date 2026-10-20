@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -5,6 +6,7 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { PageHero } from "@/components/shared/page-hero";
 import { sanityFetch } from "@/sanity/fetch";
+import { LikeAndShare } from "@/components/shared/like-and-share";
 import {
   GALLERY_ALBUM_BY_SLUG_QUERY,
   GALLERY_ALBUM_SLUGS_QUERY,
@@ -23,6 +25,7 @@ type SanityAlbumDetail = {
   category: string;
   year: number;
   coverImage: string;
+  likes?: number;
   images?: Array<{ _key: string; url: string; caption?: string }>;
   videos?: Array<{ _key: string; url: string; caption?: string }>;
 };
@@ -81,6 +84,11 @@ async function AlbumContent({ params }: { params: Promise<Params> }) {
     })),
   ];
 
+    const headersList = await headers();
+    const host = headersList.get("host") || "www.sejfarmsgroup.com";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const albumUrl = `${protocol}://${host}/gallery/${album}`;
+
   return (
     <>
       <PageHero
@@ -95,6 +103,12 @@ async function AlbumContent({ params }: { params: Promise<Params> }) {
         <Container>
           <AlbumMediaGrid media={media} albumTitle={found.title} />
         </Container>
+        <LikeAndShare
+          documentId={found._id}
+          title={found.title}
+          url={albumUrl}
+          initialLikes={found.likes || 0}
+        />
       </Section>
     </>
   );

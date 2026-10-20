@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -8,6 +9,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { JobApplicationForm } from "@/components/shared/job-application-form";
 import { sanityFetch } from "@/sanity/fetch";
 import { JOB_BY_SLUG_QUERY, JOB_SLUGS_QUERY } from "@/sanity/queries";
+import { LikeAndShare } from "@/components/shared/like-and-share";
 
 export const instant = false;
 
@@ -23,6 +25,7 @@ type SanityJob = {
   postedAt: string;
   closesAt?: string;
   summary: string;
+  likes?: number;
   responsibilities: string[];
   requirements: string[];
   niceToHave?: string[];
@@ -77,6 +80,12 @@ async function JobContent({ params }: { params: Promise<Params> }) {
         day: "numeric",
       })
     : null;
+
+    const headersList = await headers();
+    const host = headersList.get("host") || "www.sejfarmsgroup.com";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const jobUrl = `${protocol}://${host}/careers/${slug}`;
+
 
   return (
     <>
@@ -143,6 +152,15 @@ async function JobContent({ params }: { params: Promise<Params> }) {
           </div>
         </Container>
       </Section>
+      
+      <div className="mx-auto max-w-3xl mt-8">
+        <LikeAndShare
+          documentId={job._id}
+          title={job.title}
+          url={jobUrl}
+          initialLikes={job.likes || 0}
+        />
+      </div>
 
       <Section className="bg-white">
         <Container>

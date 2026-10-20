@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -10,6 +11,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 import { sanityFetch } from "@/sanity/fetch";
 import { EVENT_BY_SLUG_QUERY, EVENT_SLUGS_QUERY } from "@/sanity/queries";
+import { LikeAndShare } from "@/components/shared/like-and-share";
 
 export const instant = false;
 
@@ -28,6 +30,7 @@ type SanityEvent = {
   requiresRegistration: boolean;
   capacity?: number;
   image?: string;
+  likes?: number;
   past: boolean;
 };
 
@@ -87,6 +90,13 @@ async function EventContent({ params }: { params: Promise<Params> }) {
         day: "numeric",
       })
     : null;
+
+
+      const headersList = await headers();
+      const host = headersList.get("host") || "www.sejfarmsgroup.com";
+      const protocol = host.includes("localhost") ? "http" : "https";
+      const eventUrl = `${protocol}://${host}/events/${slug}`;
+
 
   return (
     <>
@@ -153,6 +163,14 @@ async function EventContent({ params }: { params: Promise<Params> }) {
           </Reveal>
         </Container>
       </Section>
+      <div className="mx-auto max-w-3xl mt-8">
+        <LikeAndShare
+          documentId={event._id}
+          title={event.title}
+          url={eventUrl}
+          initialLikes={event.likes || 0}
+        />
+      </div>
 
       <PageCTA
         title="Have a question about this event?"

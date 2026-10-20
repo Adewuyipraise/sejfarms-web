@@ -84,6 +84,13 @@ export const event = defineType({
       type: "boolean",
       initialValue: false,
     }),
+    defineField({
+      name: "likes",
+      title: "Likes",
+      type: "number",
+      initialValue: 0,
+      readOnly: true,
+    }),
   ],
   preview: {
     select: {

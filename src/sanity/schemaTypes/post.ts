@@ -116,6 +116,13 @@ export const post = defineType({
       initialValue: false,
     }),
     defineField({
+      name: "likes",
+      title: "Likes",
+      type: "number",
+      initialValue: 0,
+      readOnly: true, // So the admin can't accidentally change it manually
+    }),    
+    defineField({
       name: "externalUrl",
       title: "External URL",
       description: "For social posts that link out to Facebook, LinkedIn, etc.",
